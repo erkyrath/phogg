@@ -4,6 +4,7 @@ from tinyapp.handler import ReqHandler
 from tinyapp.constants import PLAINTEXT, HTML
 
 from phogglib.phoggapp import PhoggApp
+import phogglib.cli
 
 class han_Home(ReqHandler):
     def do_get(self, req):
@@ -18,5 +19,6 @@ appinstance = PhoggApp(config, [
 application = appinstance.application
 
 if __name__ == '__main__':
-    print('### ok')
+    phogglib.cli.run(appinstance)
+
     
