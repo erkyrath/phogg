@@ -56,8 +56,7 @@ def parse_png(pathname):
             height = (dat[0] << 24) | (dat[1] << 16) | (dat[2] << 8) | dat[3]
             fl.close()
             return (width, height)
-        fl.read(clen) # or seek?
-        fl.read(4)
+        fl.seek(clen+4, os.SEED_CUR)
     raise Exception('No PNG header block found')
 
 def parse_jpeg(dat):
