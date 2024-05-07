@@ -1,0 +1,87 @@
+
+body {
+    background-color: white;
+    font-family: "Verdana", sans-serif;
+    margin: 0px;
+}
+
+#header {
+    position: absolute;
+    margin: 0px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: 60px;
+    background-color: #DAB886;
+}
+
+#headercol {
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+#header h1 {
+    margin-top: 12px;
+    font-weight: normal;
+    font: 180% Georgia, "Times New Roman", serif;
+}
+
+#body {
+    position: absolute;
+    margin: 0px;
+    left: 0px;
+    right: 0px;
+    top: 60px;
+    bottom: 0px;
+}
+
+#toolcol {
+    position: absolute;
+    left: 0px;
+    width: 20%;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: #EEE;
+}
+
+#maincol {
+    position: absolute;
+    left: 20%;
+    right: 0px;
+    height: 100%;
+    overflow-y: scroll;
+    background-color: white;
+}
+
+.PhotoGrid {
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 200px);
+}
+
+.PhotoCell {
+    margin-left: 10px;
+    margin-top: 10px;
+    background: white;
+}
+
+img.PhotoH {
+    width: 190px;
+}
+
+img.PhotoV {
+    height: 190px;
+}
+
+.PhotoCell .Filename {
+    font-size: 85%;
+    font-weight: bold;
+    padding: 4px 8px;
+}
+
+.PhotoCell .Tags {
+    font-size: 85%;
+    font-style: italic;
+    padding: 4px 8px;
+}
