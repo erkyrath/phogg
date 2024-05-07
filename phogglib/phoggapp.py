@@ -9,6 +9,8 @@ from tinyapp.app import TinyApp, TinyRequest
 from tinyapp.handler import ReqHandler
 import tinyapp.auth
 
+from phogglib.pic import do_scandir
+
 class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
         TinyApp.__init__(self, hanclasses, wrapall=[])
@@ -17,6 +19,7 @@ class PhoggApp(TinyApp):
         self.approot = '/phogg'
         self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
         self.template_path = '/Users/zarf/src/phogg/templates'
+        self.pic_path = '/Users/zarf/src/phogg/testpics'
         
         # Thread-local storage for various things which are not thread-safe.
         self.threadcache = threading.local()
@@ -65,4 +68,8 @@ class PhoggApp(TinyApp):
         if params:
             map.update(params)
         yield tem.render(**map)
+
+    def scandir(self, force=False):
+        ### timestamp check unless force (subdirs harder?)
+        do_scandir(self)
         

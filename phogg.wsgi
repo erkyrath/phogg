@@ -8,6 +8,7 @@ import phogglib.cli
 
 class han_Home(ReqHandler):
     def do_get(self, req):
+        self.app.scandir()
         return self.app.render('main.html', req)
 
 config = {} ###

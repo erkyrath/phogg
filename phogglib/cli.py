@@ -8,6 +8,9 @@ def run(appinstance):
     popt_createdb = subopt.add_parser('createdb', help='create database tables')
     popt_createdb.set_defaults(cmdfunc=cmd_createdb)
     
+    popt_scan = subopt.add_parser('scan', help='scan photo dir')
+    popt_scan.set_defaults(cmdfunc=cmd_scan)
+    
     args = popt.parse_args()
 
     if not args.cmd:
@@ -34,3 +37,6 @@ def cmd_createdb(args, app):
         print('creating "tags" table...')
         curs.execute('CREATE TABLE tags(guid, tag)')
 
+def cmd_scan(args, app):
+    app.scandir(force=True)
+    
