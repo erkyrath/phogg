@@ -16,7 +16,8 @@ def do_scandir(app):
             if tup:
                 continue
 
-            guid = uuid.uuid1(clock_seq=counter)
+            guid = str(uuid.uuid1(clock_seq=counter))
+            sta = os.stat(pathname)
             
             _, suffix = os.path.splitext(pathname)
             suffix = suffix.lower()
