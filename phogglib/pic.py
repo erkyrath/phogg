@@ -25,11 +25,10 @@ def do_scandir(app):
             try:
                 if suffix == '.png':
                     filetype = 'png'
-                    (width, height) = parse_png(fl)
+                    (width, height) = parse_png(pathname)
                 elif suffix in ('.jpg', '.jpeg'):
                     filetype = 'jpeg'
-                    dat = open(pathname, 'rb').read()
-                    (width, height) = parse_jpeg(dat)
+                    (width, height) = parse_jpeg(pathname)
                 else:
                     continue
             except Exception as ex:
@@ -56,33 +55,33 @@ def parse_png(pathname):
             height = (dat[0] << 24) | (dat[1] << 16) | (dat[2] << 8) | dat[3]
             fl.close()
             return (width, height)
-        fl.seek(clen+4, os.SEED_CUR)
+        fl.seek(clen+4, os.SEEK_CUR)
     raise Exception('No PNG header block found')
 
-def parse_jpeg(dat):
-    dat = bytes_to_intarray(dat)
-    #print('Length:', len(dat))
-    pos = 0
-    while pos < len(dat):
-        if dat[pos] != 0xFF:
+def parse_jpeg(pathname):
+    fl = open(pathname, 'rb')
+    while True:
+        if fl.read(1)[0] != 0xFF:
             raise Exception('marker is not FF')
-        while dat[pos] == 0xFF:
-            pos += 1
-        marker = dat[pos]
-        pos += 1
+        marker = fl.read(1)[0]
+        while marker == 0xFF:
+            marker = fl.read(1)[0]
         if marker == 0x01 or (marker >= 0xD0 and marker <= 0xD9):
             #print('FF%02X*' % (marker,))
             continue
-        clen = (dat[pos] << 8) | dat[pos+1]
+        dat = list(fl.read(2))
+        clen = (dat[0] << 8) | dat[1]
         #print('FF%02X, len %d' % (marker, clen))
         if (marker >= 0xC0 and marker <= 0xCF and marker != 0xC8):
             if clen <= 7:
                 raise Exception('SOF block is too small')
-            bits = dat[pos+2]
-            height = (dat[pos+3] << 8) | dat[pos+4]
-            width  = (dat[pos+5] << 8) | dat[pos+6]
+            dat = list(fl.read(5))
+            bits = dat[0]
+            height = (dat[1] << 8) | dat[2]
+            width  = (dat[3] << 8) | dat[4]
+            fl.close()
             return (width, height)
-        pos += clen
+        fl.seek(clen-2, os.SEEK_CUR)
     raise Exception('SOF block not found')
 
 def bytes_to_intarray(dat):
