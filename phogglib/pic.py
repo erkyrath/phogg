@@ -1,6 +1,26 @@
 import os, os.path
 import uuid
 
+class Pic:
+    def __init__(self, guid, pathname, type, width, height, timestamp):
+        self.guid = guid
+        self.pathname = pathname
+        self.type = type
+        self.width = width
+        self.height = height
+        self.timestamp = timestamp
+
+    def tojson(self):
+        return {
+            'guid': self.guid,
+            'pathname': self.pathname,
+            'type': self.type,
+            'width': self.width,
+            'height': self.height,
+            'timestamp': self.timestamp,
+            ### human-readable?
+        }
+
 def do_scandir(app):
     curs = app.getdb().cursor()
     counter = 0
