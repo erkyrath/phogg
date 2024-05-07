@@ -60,10 +60,19 @@ body {
     grid-template-columns: repeat(auto-fill, 200px);
 }
 
-.PhotoCell {
-    position: relative;
+.PhotoCellBox {
     margin-left: 10px;
     margin-top: 10px;
+    display: flex;
+}
+
+.PhotoCellGap {
+    flex: 1 1;
+}
+
+.PhotoCell {
+    flex: 0 0;
+    position: relative;
     background: white;
 }
 
