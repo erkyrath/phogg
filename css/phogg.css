@@ -57,7 +57,7 @@ body {
     position: relative;
     width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 200px);
+    grid-template-columns: repeat(auto-fill, 220px);
 }
 
 .PhotoCellBox {
@@ -74,18 +74,28 @@ body {
     flex: 0 0;
     position: relative;
     background: white;
+    border-radius: 4px;
+}
+
+.PhotoCellBox.Selected .PhotoCell {
+    background: #9AF;
+}
+
+.PhotoCell .Photo {
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 .PhotoCell .Filename {
     font-size: 85%;
     font-weight: bold;
-    padding: 4px 8px;
+    padding: 6px 10px;
 }
 
 .PhotoCell .Tags {
     font-size: 85%;
     font-style: italic;
-    padding: 4px 8px;
+    padding: 6px 10px;
 }
 
 .PhotoCell .OutButton {
