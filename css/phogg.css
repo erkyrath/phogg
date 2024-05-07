@@ -61,17 +61,10 @@ body {
 }
 
 .PhotoCell {
+    position: relative;
     margin-left: 10px;
     margin-top: 10px;
     background: white;
-}
-
-img.PhotoH {
-    width: 190px;
-}
-
-img.PhotoV {
-    height: 190px;
 }
 
 .PhotoCell .Filename {
@@ -84,4 +77,23 @@ img.PhotoV {
     font-size: 85%;
     font-style: italic;
     padding: 4px 8px;
+}
+
+.PhotoCell .OutButton {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+
+.PhotoCell .OutButton a {
+    font-size: 85%;
+    padding-left: 4px;
+    padding-right: 4px;
+    color: black;
+    text-decoration: none;
+}
+
+.PhotoCell .OutButton a:hover {
+    color: white;
+    background-color: #68F;
 }

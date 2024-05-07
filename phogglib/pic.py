@@ -35,8 +35,8 @@ def do_scandir(app):
                 ### log somewhere?
                 continue
             
-            print('### scandir:', rpathname, guid, width, height)
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', (guid, rpathname, filetype, width, height, int(sta.st_mtime)))
+            ### clear tags, add based on date and dir
 
 def parse_png(pathname):
     fl = open(pathname, 'rb')
