@@ -25,8 +25,7 @@ def do_scandir(app):
             try:
                 if suffix == '.png':
                     filetype = 'png'
-                    dat = open(pathname, 'rb').read()
-                    (width, height) = parse_png(dat)
+                    (width, height) = parse_png(fl)
                 elif suffix in ('.jpg', '.jpeg'):
                     filetype = 'jpeg'
                     dat = open(pathname, 'rb').read()
@@ -38,28 +37,27 @@ def do_scandir(app):
                 continue
             
             print('### scandir:', rpathname, guid, width, height)
+            curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', (guid, rpathname, filetype, width, height, int(sta.st_mtime)))
 
-def parse_png(dat):
-    dat = bytes_to_intarray(dat)
-    pos = 0
-    sig = dat[pos:pos+8]
-    pos += 8
-    if sig != [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]:
+def parse_png(pathname):
+    fl = open(pathname, 'rb')
+    sig = fl.read(8)
+    if list(sig) != [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]:
         raise Exception('PNG signature does not match')
-    while pos < len(dat):
-        clen = (dat[pos] << 24) | (dat[pos+1] << 16) | (dat[pos+2] << 8) | dat[pos+3]
-        pos += 4
-        ctyp = intarray_to_bytes(dat[pos:pos+4])
-        pos += 4
+    while True:
+        dat = list(fl.read(4))
+        clen = (dat[0] << 24) | (dat[1] << 16) | (dat[2] << 8) | dat[3]
+        ctyp = fl.read(4)
         #print('Chunk:', ctyp, 'len', clen)
         if ctyp == b'IHDR':
-            width  = (dat[pos] << 24) | (dat[pos+1] << 16) | (dat[pos+2] << 8) | dat[pos+3]
-            pos += 4
-            height = (dat[pos] << 24) | (dat[pos+1] << 16) | (dat[pos+2] << 8) | dat[pos+3]
-            pos += 4
+            dat = list(fl.read(4))
+            width  = (dat[0] << 24) | (dat[1] << 16) | (dat[2] << 8) | dat[3]
+            dat = list(fl.read(4))
+            height = (dat[0] << 24) | (dat[1] << 16) | (dat[2] << 8) | dat[3]
+            fl.close()
             return (width, height)
-        pos += clen
-        pos += 4
+        fl.read(clen) # or seek?
+        fl.read(4)
     raise Exception('No PNG header block found')
 
 def parse_jpeg(dat):
