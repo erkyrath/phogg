@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Photos</title>
-  <link rel="stylesheet" href="/css/phogg.css" type="text/css">
-</head>
-<body>
-  <div id="header">
-    <div id="headercol">
-      <h1>Photos</h1>
-    </div>
-  </div>
-  <div id="body">
+{% extends "page.html" %}
+
+{% block content %}
     <div id="toolcol">
-      <p>Tool here.</p>
+      <p>Tools here.</p>
     </div>
     <div id="maincol">
       <div class="PhotoGrid">
@@ -48,9 +36,7 @@
           <img class="Photo PhotoH" src="/testpics/IMG_3499.JPG">
           <div class="Tags">luggage, stuff, year:2015</div>
         </div>
-        
       </div>
     </div>
-  </div>
-</body>
-</html>
+        
+{% endblock %}
