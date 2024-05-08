@@ -163,3 +163,12 @@ body {
     margin-right: 20px;
     font-size: 85%;
 }
+
+.FilterControl {
+    margin-top: 8px;
+    margin-left: 10px;
+}
+
+.FilterControl input {
+    font-size: 100%;
+}
