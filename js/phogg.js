@@ -112,6 +112,18 @@ function evhan_select_size(ev)
     resize_all_pics();
 }
 
+function evhan_filtertext_change()
+{
+    var filter = $('#filtertext').val();
+    console.log('### filter:', filter);
+}
+
+function evhan_filtertext_commit()
+{
+    var filter = $('#filtertext').val();
+    console.log('### filter commit:', filter);
+}
+
 function evhan_imageclick(ev)
 {
     var guid = ev.data.guid;
@@ -131,6 +143,9 @@ $(document).ready(function() {
     $('#imgsize-s').on('change', { size:110, key:'Small' }, evhan_select_size);
     $('#imgsize-m').on('change', { size:180, key:'Medium' }, evhan_select_size);
     $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
+
+    $('#filtertext').on('input', evhan_filtertext_change);
+    $('#filtertext').on('change', evhan_filtertext_commit);
     
     jQuery.ajax('/phogg/api/getpics', {
         dataType: 'json',
