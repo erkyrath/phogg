@@ -21,6 +21,7 @@ function build_pic_el(pic)
     
     var imgel = $('<img>', { class:'Photo', loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
     cellel.append(imgel);
+    imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_imageclick);
 
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
     var tagtext = '';
@@ -41,8 +42,11 @@ function evhan_api_getpics(data, status, jqreq)
 {
     console.log('### request success', status, data);
     if (data.pics) {
+	var index = 0;
 	for (var pic of data.pics) {
 	    pic.aspect = pic.width / pic.height;
+	    pic.index = index;
+	    index++;
 	}
 	
 	var parel = $('.PhotoGrid');
@@ -56,6 +60,13 @@ function evhan_api_getpics(data, status, jqreq)
 function evhan_api_error(jqreq, status, error)
 {
     console.log('### request error', jqreq.status, status, error);
+}
+
+function evhan_imageclick(ev)
+{
+    var guid = ev.data.guid;
+    var index = ev.data.index;
+    console.log('### image click', index, guid, ev.metaKey, ev.shiftKey);
 }
 
 $(document).ready(function() {
