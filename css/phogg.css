@@ -74,7 +74,18 @@ body {
     position: relative;
     width: 100%;
     display: grid;
+}
+
+.PhotoGrid.SizeSmall {
+    grid-template-columns: repeat(auto-fill, 130px);
+}
+
+.PhotoGrid.SizeMedium {
     grid-template-columns: repeat(auto-fill, 210px);
+}
+
+.PhotoGrid.SizeLarge {
+    grid-template-columns: repeat(auto-fill, 390px);
 }
 
 .PhotoCellBox {
