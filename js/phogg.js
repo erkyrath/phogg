@@ -79,6 +79,8 @@ function evhan_api_getpics(data, status, jqreq)
         }
     }
 
+    allpics.sort(function(p1, p2) { return p2.timestamp - p1.timestamp; });
+
     var parel = $('.PhotoGrid');
     parel.empty();
     for (var pic of allpics) {
