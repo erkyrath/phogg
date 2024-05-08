@@ -88,6 +88,7 @@ def parse_png(pathname):
 
 def parse_jpeg(pathname):
     fl = open(pathname, 'rb')
+    orientation = 1
     while True:
         if fl.read(1)[0] != 0xFF:
             raise Exception('marker is not FF')
@@ -100,6 +101,20 @@ def parse_jpeg(pathname):
         dat = list(fl.read(2))
         clen = (dat[0] << 8) | dat[1]
         #print('FF%02X, len %d' % (marker, clen))
+        if (marker == 0xE1):
+            dat = fl.read(clen-2)
+            if dat[0:4] != b'Exif':
+                continue
+            indexcount = (dat[14] << 8) | dat[15]
+            for ix in range(indexcount):
+                pos = 16 + 12*ix
+                indextag = (dat[pos] << 8) | dat[pos+1]
+                if indextag == 0x0112:
+                    tagtype = (dat[pos+2] << 8) | dat[pos+3]
+                    tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
+                    #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    orientation = dat[pos+9]
+            continue
         if (marker >= 0xC0 and marker <= 0xCF and marker != 0xC8):
             if clen <= 7:
                 raise Exception('SOF block is too small')
@@ -108,7 +123,8 @@ def parse_jpeg(pathname):
             height = (dat[1] << 8) | dat[2]
             width  = (dat[3] << 8) | dat[4]
             fl.close()
+            if orientation in (6, 8):
+                (width, height) = (height, width)
             return (width, height)
         fl.seek(clen-2, os.SEEK_CUR)
     raise Exception('SOF block not found')
-
