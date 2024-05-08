@@ -1,5 +1,8 @@
 'use strict';
 
+var allpics = [];
+var allpicmap = new Map();
+
 var imagesize = 180;
 
 function build_pic_el(pic)
@@ -38,28 +41,73 @@ function build_pic_el(pic)
     return boxel;
 }
 
+function resize_all_pics()
+{
+    for (var pic of allpics) {
+	var imgel = $('#img-'+pic.guid);
+	if (imgel.length) {
+	    var width, height;
+	    if (pic.aspect > 1) {
+		width = imagesize;
+		height = Math.floor(imagesize / pic.aspect);
+	    }
+	    else {
+		height = imagesize;
+		width = Math.floor(imagesize * pic.aspect);
+	    }
+	    imgel.width(width);
+	    imgel.height(height);
+	}
+    }
+}
+
 function evhan_api_getpics(data, status, jqreq)
 {
-    console.log('### request success', status, data);
+    allpics = [];
+    allpicmap.clear();
+    
     if (data.pics) {
+	allpics = data.pics;
+	
 	var index = 0;
-	for (var pic of data.pics) {
+	for (var pic of allpics) {
+	    allpicmap.set(pic.guid, pic);
+	    
 	    pic.aspect = pic.width / pic.height;
 	    pic.index = index;
 	    index++;
 	}
+    }
 	
-	var parel = $('.PhotoGrid');
-	parel.empty();
-	for (var pic of data.pics) {
-	    parel.append(build_pic_el(pic));
-	}
+    var parel = $('.PhotoGrid');
+    parel.empty();
+    for (var pic of allpics) {
+	parel.append(build_pic_el(pic));
     }
 }
 
 function evhan_api_error(jqreq, status, error)
 {
     console.log('### request error', jqreq.status, status, error);
+}
+
+function evhan_select_size(ev)
+{
+    var size = ev.data.size;
+    var key = ev.data.key;
+
+    if (size == imagesize) {
+	return;
+    }
+
+    var el = $('.PhotoGrid');
+    el.removeClass('SizeLarge');
+    el.removeClass('SizeMedium');
+    el.removeClass('SizeSmall');
+    el.addClass('Size'+key);
+    
+    imagesize = size;
+    resize_all_pics();
 }
 
 function evhan_imageclick(ev)
@@ -78,6 +126,10 @@ function evhan_imageclick(ev)
 }
 
 $(document).ready(function() {
+    $('#imgsize-s').on('change', { size:100, key:'Small' }, evhan_select_size);
+    $('#imgsize-m').on('change', { size:180, key:'Medium' }, evhan_select_size);
+    $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
+    
     jQuery.ajax('/phogg/api/getpics', {
 	dataType: 'json',
 	success: evhan_api_getpics,
