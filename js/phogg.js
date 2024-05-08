@@ -4,7 +4,7 @@ var imagesize = 190;
 
 function build_pic_el(pic)
 {
-    var cellel = $('<div>', { class:'PhotoCell' });
+    var cellel = $('<div>', { class:'PhotoCell', id:'cell-'+pic.guid });
     cellel.append($('<div>', { class:'Filename' }).text(pic.pathname));
     var outel = $('<a>', { href:'testpics/'+pic.pathname, target:'_blank' }).text('\u21D7');
     cellel.append($('<div>', { class:'OutButton' }).append(outel));
@@ -19,7 +19,7 @@ function build_pic_el(pic)
 	width = Math.floor(imagesize * pic.aspect);
     }
     
-    var imgel = $('<img>', { class:'Photo', loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
+    var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
     cellel.append(imgel);
     imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_imageclick);
 
@@ -30,7 +30,7 @@ function build_pic_el(pic)
     }
     cellel.append($('<div>', { class:'Tags' }).text(tagtext));
     
-    var boxel = $('<div>', { class:'PhotoCellBox' });
+    var boxel = $('<div>', { class:'PhotoCellBox', id:'cellbox-'+pic.guid });
     boxel.append($('<div>', { class:'PhotoCellGap' }));
     boxel.append(cellel);
     boxel.append($('<div>', { class:'PhotoCellGap' }));
@@ -67,6 +67,14 @@ function evhan_imageclick(ev)
     var guid = ev.data.guid;
     var index = ev.data.index;
     console.log('### image click', index, guid, ev.metaKey, ev.shiftKey);
+
+    var box = $('#cellbox-'+guid);
+    if (box.length) {
+	if (!box.hasClass('Selected'))
+	    $('#cellbox-'+guid).addClass('Selected');
+	else
+	    $('#cellbox-'+guid).removeClass('Selected');
+    }
 }
 
 $(document).ready(function() {
