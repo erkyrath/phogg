@@ -1,5 +1,9 @@
 import os, os.path
 import uuid
+import pytz
+import datetime
+
+tz_utc = pytz.timezone('UTC')
 
 class Pic:
     def __init__(self, guid, pathname, type, width, height, timestamp):
@@ -10,6 +14,10 @@ class Pic:
         self.height = height
         self.timestamp = timestamp
 
+        dat = datetime.datetime.fromtimestamp(timestamp)
+        dat = dat.astimezone(tz_utc)
+        self.texttime = dat.strftime('%b %d, %Y')
+        
     def tojson(self):
         return {
             'guid': self.guid,
@@ -18,7 +26,7 @@ class Pic:
             'width': self.width,
             'height': self.height,
             'timestamp': self.timestamp,
-            ### human-readable?
+            'texttime': self.texttime,
         }
 
 def do_scandir(app):

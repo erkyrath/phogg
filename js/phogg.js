@@ -21,6 +21,8 @@ function build_pic_el(pic)
     
     var imgel = $('<img>', { class:'Photo', loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
     cellel.append(imgel);
+
+    cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
     
     var boxel = $('<div>', { class:'PhotoCellBox' });
     boxel.append($('<div>', { class:'PhotoCellGap' }));

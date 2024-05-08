@@ -99,6 +99,12 @@ body {
     padding: 6px 10px;
 }
 
+.PhotoCell .Date {
+    font-size: 75%;
+    font-style: italic;
+    padding: 6px 10px;
+}
+
 .PhotoCell .Tags {
     font-size: 85%;
     font-style: italic;
