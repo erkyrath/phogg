@@ -128,7 +128,7 @@ function evhan_imageclick(ev)
 }
 
 $(document).ready(function() {
-    $('#imgsize-s').on('change', { size:100, key:'Small' }, evhan_select_size);
+    $('#imgsize-s').on('change', { size:110, key:'Small' }, evhan_select_size);
     $('#imgsize-m').on('change', { size:180, key:'Medium' }, evhan_select_size);
     $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
     

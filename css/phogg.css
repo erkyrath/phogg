@@ -77,7 +77,7 @@ body {
 }
 
 .PhotoGrid.SizeSmall {
-    grid-template-columns: repeat(auto-fill, 130px);
+    grid-template-columns: repeat(auto-fill, 140px);
 }
 
 .PhotoGrid.SizeMedium {
