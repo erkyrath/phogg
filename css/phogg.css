@@ -155,3 +155,11 @@ body {
     color: black;
     background: white;
 }
+
+.SizeControl {
+    float: right;
+    margin-top: 8px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-size: 85%;
+}
