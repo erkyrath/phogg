@@ -35,7 +35,13 @@ def cmd_createdb(args, app):
         print('"tags" table exists')
     else:
         print('creating "tags" table...')
-        curs.execute('CREATE TABLE tags(guid, tag)')
+        curs.execute('CREATE TABLE tags(tag unique, autogen)')
+
+    if 'assoc' in tables:
+        print('"assoc" table exists')
+    else:
+        print('creating "assoc" table...')
+        curs.execute('CREATE TABLE assoc(guid, tag)')
 
 def cmd_scan(args, app):
     app.scandir(force=True)
