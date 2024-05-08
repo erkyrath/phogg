@@ -112,9 +112,3 @@ def parse_jpeg(pathname):
         fl.seek(clen-2, os.SEEK_CUR)
     raise Exception('SOF block not found')
 
-def bytes_to_intarray(dat):
-    return [ val for val in dat ]
-
-def intarray_to_bytes(arr):
-    return bytes(arr)
-    
