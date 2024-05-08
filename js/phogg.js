@@ -14,12 +14,12 @@ function build_pic_el(pic)
 
     var width, height;
     if (pic.aspect > 1) {
-	width = imagesize;
-	height = Math.floor(imagesize / pic.aspect);
+        width = imagesize;
+        height = Math.floor(imagesize / pic.aspect);
     }
     else {
-	height = imagesize;
-	width = Math.floor(imagesize * pic.aspect);
+        height = imagesize;
+        width = Math.floor(imagesize * pic.aspect);
     }
     
     var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
@@ -29,7 +29,7 @@ function build_pic_el(pic)
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
     var tagtext = '';
     if (pic.tags) {
-	tagtext = pic.tags.join(', ');
+        tagtext = pic.tags.join(', ');
     }
     cellel.append($('<div>', { class:'Tags' }).text(tagtext));
     
@@ -44,20 +44,20 @@ function build_pic_el(pic)
 function resize_all_pics()
 {
     for (var pic of allpics) {
-	var imgel = $('#img-'+pic.guid);
-	if (imgel.length) {
-	    var width, height;
-	    if (pic.aspect > 1) {
-		width = imagesize;
-		height = Math.floor(imagesize / pic.aspect);
-	    }
-	    else {
-		height = imagesize;
-		width = Math.floor(imagesize * pic.aspect);
-	    }
-	    imgel.width(width);
-	    imgel.height(height);
-	}
+        var imgel = $('#img-'+pic.guid);
+        if (imgel.length) {
+            var width, height;
+            if (pic.aspect > 1) {
+                width = imagesize;
+                height = Math.floor(imagesize / pic.aspect);
+            }
+            else {
+                height = imagesize;
+                width = Math.floor(imagesize * pic.aspect);
+            }
+            imgel.width(width);
+            imgel.height(height);
+        }
     }
 }
 
@@ -67,22 +67,22 @@ function evhan_api_getpics(data, status, jqreq)
     allpicmap.clear();
     
     if (data.pics) {
-	allpics = data.pics;
-	
-	var index = 0;
-	for (var pic of allpics) {
-	    allpicmap.set(pic.guid, pic);
-	    
-	    pic.aspect = pic.width / pic.height;
-	    pic.index = index;
-	    index++;
-	}
+        allpics = data.pics;
+        
+        var index = 0;
+        for (var pic of allpics) {
+            allpicmap.set(pic.guid, pic);
+            
+            pic.aspect = pic.width / pic.height;
+            pic.index = index;
+            index++;
+        }
     }
-	
+
     var parel = $('.PhotoGrid');
     parel.empty();
     for (var pic of allpics) {
-	parel.append(build_pic_el(pic));
+        parel.append(build_pic_el(pic));
     }
 }
 
@@ -97,7 +97,7 @@ function evhan_select_size(ev)
     var key = ev.data.key;
 
     if (size == imagesize) {
-	return;
+        return;
     }
 
     var el = $('.PhotoGrid');
@@ -118,10 +118,10 @@ function evhan_imageclick(ev)
 
     var box = $('#cellbox-'+guid);
     if (box.length) {
-	if (!box.hasClass('Selected'))
-	    $('#cellbox-'+guid).addClass('Selected');
-	else
-	    $('#cellbox-'+guid).removeClass('Selected');
+        if (!box.hasClass('Selected'))
+            $('#cellbox-'+guid).addClass('Selected');
+        else
+            $('#cellbox-'+guid).removeClass('Selected');
     }
 }
 
@@ -131,8 +131,8 @@ $(document).ready(function() {
     $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
     
     jQuery.ajax('/phogg/api/getpics', {
-	dataType: 'json',
-	success: evhan_api_getpics,
-	error: evhan_api_error,
+        dataType: 'json',
+        success: evhan_api_getpics,
+        error: evhan_api_error,
     });
 });
