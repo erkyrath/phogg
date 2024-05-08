@@ -17,6 +17,9 @@ class Pic:
         dat = datetime.datetime.fromtimestamp(timestamp)
         dat = dat.astimezone(tz_utc)
         self.texttime = dat.strftime('%b %d, %Y')
+        self.yeartag = dat.strftime('year:%Y')
+        self.monthtag = dat.strftime('month:%Y-%b')
+        self.daytag = dat.strftime('dat:%Y-%b-%d')
         
     def tojson(self):
         return {
@@ -30,6 +33,8 @@ class Pic:
         }
 
 def do_scandir(app):
+    newtags = set()
+    
     curs = app.getdb().cursor()
     counter = 0
     
@@ -62,9 +67,22 @@ def do_scandir(app):
             except Exception as ex:
                 ### log somewhere?
                 continue
+
+            pictup = (guid, rpathname, filetype, width, height, int(sta.st_mtime))
+            pic = Pic(*pictup)
+            curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', pictup)
+            curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
             
-            curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', (guid, rpathname, filetype, width, height, int(sta.st_mtime)))
-            ### clear tags, add based on date and dir
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.yeartag))
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.monthtag))
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.daytag))
+            newtags.add(pic.yeartag)
+            newtags.add(pic.monthtag)
+            newtags.add(pic.daytag)
+
+    for tag in newtags:
+        curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, True))
+    
 
 def parse_png(pathname):
     fl = open(pathname, 'rb')
