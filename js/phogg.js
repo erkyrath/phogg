@@ -23,6 +23,11 @@ function build_pic_el(pic)
     cellel.append(imgel);
 
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
+    var tagtext = '';
+    if (pic.tags) {
+	tagtext = pic.tags.join(', ');
+    }
+    cellel.append($('<div>', { class:'Tags' }).text(tagtext));
     
     var boxel = $('<div>', { class:'PhotoCellBox' });
     boxel.append($('<div>', { class:'PhotoCellGap' }));

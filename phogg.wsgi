@@ -18,6 +18,9 @@ class han_GetPics(ReqHandler):
         curs = self.app.getdb().cursor()
         res = curs.execute('SELECT * FROM pics')
         picls = [ Pic(*tup) for tup in res.fetchall() ]
+
+        for pic in picls:
+            pic.fetchtags(self.app)
         
         req.set_content_type('text/json')
         dat = {

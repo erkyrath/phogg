@@ -14,15 +14,30 @@ class Pic:
         self.height = height
         self.timestamp = timestamp
 
+        self.tags = None
+
         dat = datetime.datetime.fromtimestamp(timestamp)
         dat = dat.astimezone(tz_utc)
         self.texttime = dat.strftime('%b %d, %Y')
         self.yeartag = dat.strftime('year:%Y')
         self.monthtag = dat.strftime('month:%Y-%b')
-        self.daytag = dat.strftime('dat:%Y-%b-%d')
+        self.daytag = dat.strftime('day:%Y-%b-%d')
+
+        subdir, _, _ = pathname.rpartition('/')
+        if subdir:
+            self.dirtag = 'dir:'+subdir
+        else:
+            self.dirtag = None
+
+    def fetchtags(self, app):
+        curs = app.getdb().cursor()
+        res = curs.execute('SELECT tag FROM assoc WHERE guid = ?', (self.guid,))
+        ls = [ tup[0] for tup in res.fetchall() ]
+        ls.sort()
+        self.tags = ls
         
     def tojson(self):
-        return {
+        res = {
             'guid': self.guid,
             'pathname': self.pathname,
             'type': self.type,
@@ -31,6 +46,9 @@ class Pic:
             'timestamp': self.timestamp,
             'texttime': self.texttime,
         }
+        if self.tags:
+            res['tags'] = list(self.tags)
+        return res
 
 def do_scandir(app):
     newtags = set()
@@ -79,6 +97,9 @@ def do_scandir(app):
             newtags.add(pic.yeartag)
             newtags.add(pic.monthtag)
             newtags.add(pic.daytag)
+            if pic.dirtag:
+                curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.dirtag))
+                newtags.add(pic.dirtag)
 
     for tag in newtags:
         curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, True))
