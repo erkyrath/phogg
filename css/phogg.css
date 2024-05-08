@@ -74,18 +74,11 @@ body {
     flex: 0 0;
     position: relative;
     border-radius: 4px;
-}
-
-.PhotoCell:hover {
     background: #F0F0F0;
 }
 
 .PhotoCellBox.Selected .PhotoCell {
     background: #8AF;
-}
-
-.PhotoCellBox.Selected .PhotoCell:hover {
-    background: #79F;
 }
 
 .PhotoCell .Photo {
