@@ -1,6 +1,6 @@
 'use strict';
 
-var imagesize = 190;
+var imagesize = 180;
 
 function build_pic_el(pic)
 {
