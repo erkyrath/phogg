@@ -41,7 +41,7 @@ body {
     width: 20%;
     height: 100%;
     overflow-y: scroll;
-    background-color: #DDD;
+    background-color: #E0DDD0;
 }
 
 #maincol {
@@ -175,7 +175,8 @@ body {
 
 .ToolBox {
     border: 1px solid #CCC;
-    background: white;
+    border-radius: 4px;
+    background: #FCFCF8;
     margin: 10px;
     padding: 6px;
 }
