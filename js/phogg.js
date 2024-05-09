@@ -326,9 +326,12 @@ function tag_sort_func(t1, t2)
     var tag1 = alltagmap.get(t1);
     var tag2 = alltagmap.get(t2);
 
-    if (tag1.autogen && !tag2.autogen)
+    var auto1 = tag1 ? tag1.autogen : false;
+    var auto2 = tag2 ? tag2.autogen : false;
+    
+    if (auto1 && !auto2)
         return 1;
-    if (tag2.autogen && !tag1.autogen)
+    if (auto2 && !auto1)
         return -1;
     return t1.localeCompare(t2);
 }
