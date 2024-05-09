@@ -134,6 +134,12 @@ function rebuild_selected_tags()
     var boxel = $('.SelectedTagBox');
     boxel.empty();
 
+    if (tagset.size == 0) {
+        var el = $('<p>', { class:'Info' }).text('No photos selected');
+        boxel.append(el);
+        return;
+    }
+
     var tagls = Array.from(tagset);
     tagls.sort();
 

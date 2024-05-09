@@ -186,6 +186,12 @@ body {
     margin-bottom: 6px;
 }
 
+.ToolBox .Info {
+    font-size: 85%;
+    font-style: italic;
+    color: #888;
+}
+
 .ToolBox .Tag {
     display: inline-block;
     font-size: 85%;
