@@ -224,6 +224,21 @@ function evhan_imageclick(ev)
     }
 }
 
+function evhan_click_background(ev)
+{
+    var target = $(ev.target);
+    if (!(target.hasClass('PhotoGrid') || target.hasClass('PhotoCellGap')))
+        return;
+    
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    if (selected.size) {
+        selected.clear();
+        adjust_selected_pics(true, []);
+    }
+}
+
 $(document).ready(function() {
     $('#imgsize-s').on('change', { size:110, key:'Small' }, evhan_select_size);
     $('#imgsize-m').on('change', { size:180, key:'Medium' }, evhan_select_size);
@@ -231,6 +246,8 @@ $(document).ready(function() {
 
     $('#filtertext').on('input', evhan_filtertext_change);
     $('#filtertext').on('change', evhan_filtertext_commit);
+
+    $('.PhotoGrid').on('click', evhan_click_background);
     
     jQuery.ajax('/phogg/api/getpics', {
         dataType: 'json',
