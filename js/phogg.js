@@ -47,6 +47,8 @@ function rebuild_pics()
     for (var pic of ls) {
         parel.append(build_pic_el(pic));
     }
+
+    rebuild_selected_tags();
 }
 
 function build_pic_el(pic)
@@ -114,6 +116,34 @@ function resize_all_pics()
     }
 }
 
+function rebuild_selected_tags()
+{
+    var tagset = new Set();
+
+    for (var guid of selected) {
+        if (!displayed.has(guid))
+            continue;
+        var pic = allpicmap.get(guid);
+        if (pic.tags) {
+            for (var tag of pic.tags) {
+                tagset.add(tag);
+            }
+        }
+    }
+    
+    var boxel = $('.SelectedTagBox');
+    boxel.empty();
+
+    var tagls = Array.from(tagset);
+    tagls.sort();
+
+    for (var tag of tagls) {
+        var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
+        el.text(tag);
+        boxel.append(el);
+    }
+}
+
 function adjust_selected_pics(clearall, guids)
 {
     if (clearall) {
@@ -128,6 +158,8 @@ function adjust_selected_pics(clearall, guids)
             $('#cellbox-'+guid).removeClass('Selected');
         }
     }
+
+    rebuild_selected_tags();
 }
 
 function evhan_api_getpics(data, status, jqreq)
