@@ -11,6 +11,42 @@ var displayed = new Set();
 
 var imagesize = 180; // 110, 180, 360
 
+var filtertext = null;
+
+function rebuild_pics()
+{
+    displayed.clear();
+    
+    var ls = [];
+    var index = 0;
+    for (var pic of allpics) {
+        pic.index = -1;
+
+        if (filtertext != null) {
+            var anymatch = false;
+            for (var tag of pic.tags) {
+                if (tag.startsWith(filtertext)) {
+                    anymatch = true;
+                    break;
+                }
+            }
+            if (!anymatch)
+                continue;
+        }
+        
+        ls.push(pic);
+        displayed.add(pic.guid);
+        pic.index = index;
+        index++;
+    }
+    
+    var parel = $('.PhotoGrid');
+    parel.empty();
+    for (var pic of ls) {
+        parel.append(build_pic_el(pic));
+    }
+}
+
 function build_pic_el(pic)
 {
     var cellel = $('<div>', { class:'PhotoCell', id:'cell-'+pic.guid });
@@ -86,24 +122,16 @@ function evhan_api_getpics(data, status, jqreq)
     
     if (data.pics) {
         allpics = data.pics;
-        
-        var index = 0;
         for (var pic of allpics) {
             allpicmap.set(pic.guid, pic);
-            
             pic.aspect = pic.width / pic.height;
-            pic.index = index;
-            index++;
+            pic.index = -1;
         }
     }
 
     allpics.sort(function(p1, p2) { return p2.timestamp - p1.timestamp; });
 
-    var parel = $('.PhotoGrid');
-    parel.empty();
-    for (var pic of allpics) {
-        parel.append(build_pic_el(pic));
-    }
+    rebuild_pics();
 }
 
 function evhan_api_error(jqreq, status, error)
@@ -133,12 +161,21 @@ function evhan_select_size(ev)
 function evhan_filtertext_change()
 {
     var filter = $('#filtertext').val();
-    console.log('### filter:', filter);
+    if (!filter.length)
+        filter = null;
+
+    if (filtertext != filter) {
+        filtertext = filter;
+        rebuild_pics();
+    }
 }
 
 function evhan_filtertext_commit()
 {
     var filter = $('#filtertext').val();
+    if (!filter.length)
+        return;
+    
     console.log('### filter commit:', filter);
 }
 
