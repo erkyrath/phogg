@@ -118,15 +118,20 @@ function resize_all_pics()
 
 function rebuild_selected_tags()
 {
-    var tagset = new Set();
+    var tagset = new Map();
+    var viscount = 0;
 
     for (var guid of selected) {
         if (!displayed.has(guid))
             continue;
         var pic = allpicmap.get(guid);
+        viscount++;
         if (pic.tags) {
             for (var tag of pic.tags) {
-                tagset.add(tag);
+                if (!tagset.has(tag))
+                    tagset.set(tag, 1);
+                else
+                    tagset.set(tag, 1+tagset.get(tag));
             }
         }
     }
@@ -144,7 +149,7 @@ function rebuild_selected_tags()
         return;
     }
 
-    var tagls = Array.from(tagset);
+    var tagls = Array.from(tagset.keys());
     tagls.sort(tagname_sort_func);
 
     for (var tag of tagls) {
@@ -156,8 +161,18 @@ function rebuild_selected_tags()
         var tagkey = tag.replace(':', '__');
         var chel1 = $('#seltag-'+tagkey+' input');
         var chel2 = $('#alltag-'+tagkey+' input');
-        chel1.prop('checked', true);
-        chel2.prop('checked', true);
+        if (tagset.get(tag) == viscount) {
+            chel1.prop('checked', true);
+            chel2.prop('checked', true);
+            chel1.prop('indeterminate', false);
+            chel2.prop('indeterminate', false);
+        }
+        else {
+            chel1.prop('checked', false);
+            chel2.prop('checked', false);
+            chel1.prop('indeterminate', true);
+            chel2.prop('indeterminate', true);
+        }
     }
 }
 
