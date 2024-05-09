@@ -141,7 +141,7 @@ function rebuild_selected_tags()
     }
 
     var tagls = Array.from(tagset);
-    tagls.sort(tag_sort_func);
+    tagls.sort(tagname_sort_func);
 
     for (var tag of tagls) {
         var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
@@ -166,6 +166,18 @@ function adjust_selected_pics(clearall, guids)
     }
 
     rebuild_selected_tags();
+}
+
+function rebuild_alltags()
+{
+    var boxel = $('.AllTagBox');
+    boxel.empty();
+    for (var tagobj of alltags) {
+        var tag = tagobj.tag;
+        var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
+        el.text(tag);
+        boxel.append(el);
+    }
 }
 
 function evhan_api_getpics(data, status, jqreq)
@@ -195,8 +207,10 @@ function evhan_api_getpics(data, status, jqreq)
         }
     }
 
+    alltags.sort(tagobj_sort_func);
     allpics.sort(function(p1, p2) { return p2.timestamp - p1.timestamp; });
 
+    rebuild_alltags();
     rebuild_pics();
 }
 
@@ -321,7 +335,7 @@ function evhan_click_background(ev)
     }
 }
 
-function tag_sort_func(t1, t2)
+function tagname_sort_func(t1, t2)
 {
     var tag1 = alltagmap.get(t1);
     var tag2 = alltagmap.get(t2);
@@ -334,6 +348,18 @@ function tag_sort_func(t1, t2)
     if (auto2 && !auto1)
         return -1;
     return t1.localeCompare(t2);
+}
+
+function tagobj_sort_func(tag1, tag2)
+{
+    var auto1 = tag1 ? tag1.autogen : false;
+    var auto2 = tag2 ? tag2.autogen : false;
+    
+    if (auto1 && !auto2)
+        return 1;
+    if (auto2 && !auto1)
+        return -1;
+    return tag1.tag.localeCompare(tag2.tag);
 }
 
 $(document).ready(function() {
