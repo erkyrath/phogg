@@ -7,6 +7,7 @@ from tinyapp.constants import PLAINTEXT, HTML
 
 from phogglib.phoggapp import PhoggApp
 from phogglib.pic import Pic
+from phogglib.tag import Tag
 
 class han_Home(ReqHandler):
     def do_get(self, req):
@@ -16,6 +17,10 @@ class han_Home(ReqHandler):
 class han_GetPics(ReqHandler):
     def do_get(self, req):
         curs = self.app.getdb().cursor()
+
+        res = curs.execute('SELECT * FROM tags')
+        tagls = [ Tag(*tup) for tup in res.fetchall() ]
+        
         res = curs.execute('SELECT * FROM pics')
         picls = [ Pic(*tup) for tup in res.fetchall() ]
 
@@ -25,6 +30,7 @@ class han_GetPics(ReqHandler):
         req.set_content_type('text/json')
         dat = {
             'pics': [ pic.tojson() for pic in picls ],
+            'tags': [ tag.tojson() for tag in tagls ],
         }
         yield(json.dumps(dat))
     

@@ -1,9 +1,15 @@
 'use strict';
 
+var alltags = [];
+var alltagmap = new Map();
+
 var allpics = [];
 var allpicmap = new Map();
 
-var imagesize = 180;
+var selected = new Set();
+var displayed = new Set();
+
+var imagesize = 180; // 110, 180, 360
 
 function build_pic_el(pic)
 {
@@ -63,8 +69,20 @@ function resize_all_pics()
 
 function evhan_api_getpics(data, status, jqreq)
 {
+    alltags = [];
+    alltagmap.clear();
+
+    if (data.tags) {
+        alltags = data.tags;
+        for (var tag of alltags) {
+            alltagmap.set(tag.tag, tag);
+        }
+    }
+    
     allpics = [];
     allpicmap.clear();
+    displayed.clear();
+    selected.clear();
     
     if (data.pics) {
         allpics = data.pics;
