@@ -76,6 +76,8 @@ function build_pic_el(pic)
     cellel.append($('<div>', { class:'Tags' }).text(tagtext));
     
     var boxel = $('<div>', { class:'PhotoCellBox', id:'cellbox-'+pic.guid });
+    if (selected.has(pic.guid))
+        boxel.addClass('Selected');
     boxel.append($('<div>', { class:'PhotoCellGap' }));
     boxel.append(cellel);
     boxel.append($('<div>', { class:'PhotoCellGap' }));
@@ -99,6 +101,22 @@ function resize_all_pics()
             }
             imgel.width(width);
             imgel.height(height);
+        }
+    }
+}
+
+function adjust_selected_pics(clearall, guids)
+{
+    if (clearall) {
+        $('.PhotoCellBox').removeClass('Selected');
+    }
+
+    for (var guid of guids) {
+        if (selected.has(guid)) {
+            $('#cellbox-'+guid).addClass('Selected');
+        }
+        else {
+            $('#cellbox-'+guid).removeClass('Selected');
         }
     }
 }
@@ -183,14 +201,26 @@ function evhan_imageclick(ev)
 {
     var guid = ev.data.guid;
     var index = ev.data.index;
-    console.log('### image click', index, guid, ev.metaKey, ev.shiftKey);
+    console.log('### image click', index, ev);
 
-    var box = $('#cellbox-'+guid);
-    if (box.length) {
-        if (!box.hasClass('Selected'))
-            $('#cellbox-'+guid).addClass('Selected');
-        else
-            $('#cellbox-'+guid).removeClass('Selected');
+    ev.preventDefault();
+    ev.stopPropagation();
+
+    if (ev.metaKey) {
+        if (!selected.has(guid)) {
+            selected.add(guid);
+        }
+        else {
+            selected.delete(guid);
+        }
+        adjust_selected_pics(false, [ guid ]);
+    }
+    else {
+        if (!selected.has(guid)) {
+            selected.clear();
+            selected.add(guid);
+            adjust_selected_pics(true, [ guid ]);
+        }
     }
 }
 
