@@ -134,6 +134,10 @@ function rebuild_selected_tags()
     var boxel = $('.SelectedTagBox');
     boxel.empty();
 
+    var allchecks = $('.Tag input');
+    allchecks.prop('checked', false);
+    allchecks.prop('indeterminate', null);
+
     if (tagset.size == 0) {
         var el = $('<p>', { class:'Info' }).text('No photos selected');
         boxel.append(el);
@@ -147,15 +151,26 @@ function rebuild_selected_tags()
         var el = build_tag_el(tag, false);
         boxel.append(el);
     }
+
+    for (var tag of tagls) {
+        var tagkey = tag.replace(':', '__');
+        var chel1 = $('#seltag-'+tagkey+' input');
+        var chel2 = $('#alltag-'+tagkey+' input');
+        chel1.prop('checked', true);
+        chel2.prop('checked', true);
+    }
 }
 
 function build_tag_el(tag, allbox)
 {
-    var id = (allbox ? 'alltag-'+tag : 'seltag-'+tag);
+    var tagkey = tag.replace(':', '__');
+    var id = (allbox ? 'alltag-'+tagkey : 'seltag-'+tagkey);
     var cla = (allbox ? 'AllBoxTag' : 'SelBoxTag');
     
     var el = $('<div>', { id:id, class:'Tag '+cla });
-    el.text(tag);
+    var checkel = $('<input>', { type:'checkbox' });
+    el.append(checkel);
+    el.append($('<span>').text(tag));
     
     return el;
 }
