@@ -70,7 +70,7 @@ function build_pic_el(pic)
     
     var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
     cellel.append(imgel);
-    imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_imageclick);
+    imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_click_image);
 
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
     var tagtext = '';
@@ -186,7 +186,12 @@ function build_tag_el(tag, allbox)
     var checkel = $('<input>', { type:'checkbox' });
     el.append(checkel);
     el.append($('<span>').text(tag));
-    
+
+    var tagobj = alltagmap.get(tag);
+    if (!(tagobj && tagobj.autogen)) {
+        el.on('click', { tag:tag }, evhan_click_tag);
+    }
+
     return el;
 }
 
@@ -298,7 +303,7 @@ function evhan_filtertext_commit()
     console.log('### filter commit:', filter);
 }
 
-function evhan_imageclick(ev)
+function evhan_click_image(ev)
 {
     var guid = ev.data.guid;
     var index = ev.data.index;
@@ -356,6 +361,12 @@ function evhan_imageclick(ev)
             adjust_selected_pics(true, [ guid ]);
         }
     }
+}
+
+function evhan_click_tag(ev)
+{
+    var tag = ev.data.tag;
+    console.log('### tag', tag);
 }
 
 function evhan_click_background(ev)
