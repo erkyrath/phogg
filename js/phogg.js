@@ -350,7 +350,7 @@ function evhan_imageclick(ev)
     }
     else {
         lastselectanchor = index;
-        if (!selected.has(guid)) {
+        if (!selected.has(guid) || (selected.size > 1)) {
             selected.clear();
             selected.add(guid);
             adjust_selected_pics(true, [ guid ]);
