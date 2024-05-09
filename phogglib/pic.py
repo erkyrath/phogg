@@ -20,12 +20,12 @@ class Pic:
         dat = dat.astimezone(tz_utc)
         self.texttime = dat.strftime('%b %d, %Y')
         self.yeartag = dat.strftime('year:%Y')
-        self.monthtag = dat.strftime('month:%Y-%b')
-        self.daytag = dat.strftime('day:%Y-%b-%d')
+        self.monthtag = dat.strftime('month:%Y-%b').lower()
+        self.daytag = dat.strftime('day:%Y-%b-%d').lower()
 
         subdir, _, _ = pathname.rpartition('/')
         if subdir:
-            self.dirtag = 'dir:'+subdir
+            self.dirtag = 'dir:'+subdir.lower()
         else:
             self.dirtag = None
 
