@@ -204,3 +204,7 @@ body {
     padding: 2px 4px;
     border-radius: 4px;
 }
+
+.ToolBox .Tag input {
+    pointer-events: none;
+}
