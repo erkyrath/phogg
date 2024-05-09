@@ -25,7 +25,7 @@ function rebuild_pics()
         if (filtertext != null) {
             var anymatch = false;
             for (var tag of pic.tags) {
-                if (tag.startsWith(filtertext)) {
+                if (tag.includes(filtertext)) {
                     anymatch = true;
                     break;
                 }
