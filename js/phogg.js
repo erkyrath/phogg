@@ -141,7 +141,7 @@ function rebuild_selected_tags()
     }
 
     var tagls = Array.from(tagset);
-    tagls.sort();
+    tagls.sort(tag_sort_func);
 
     for (var tag of tagls) {
         var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
@@ -264,7 +264,6 @@ function evhan_imageclick(ev)
         adjust_selected_pics(false, [ guid ]);
     }
     else if (ev.shiftKey) {
-        console.log('### anchor', lastselectanchor);
         if (lastselectanchor == -1) {
             lastselectanchor = index;
             //### also track whether this is a meta-anchor or reg-anchor?
@@ -320,6 +319,18 @@ function evhan_click_background(ev)
         selected.clear();
         adjust_selected_pics(true, []);
     }
+}
+
+function tag_sort_func(t1, t2)
+{
+    var tag1 = alltagmap.get(t1);
+    var tag2 = alltagmap.get(t2);
+
+    if (tag1.autogen && !tag2.autogen)
+        return 1;
+    if (tag2.autogen && !tag1.autogen)
+        return -1;
+    return t1.localeCompare(t2);
 }
 
 $(document).ready(function() {
