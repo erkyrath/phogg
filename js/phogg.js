@@ -210,6 +210,7 @@ function evhan_imageclick(ev)
 
     if (ev.metaKey) {
         if (!selected.has(guid)) {
+            lastselectanchor = index;
             selected.add(guid);
         }
         else {
@@ -221,6 +222,7 @@ function evhan_imageclick(ev)
         console.log('### anchor', lastselectanchor);
         if (lastselectanchor == -1) {
             lastselectanchor = index;
+            //### also track whether this is a meta-anchor or reg-anchor?
             if (!selected.has(guid)) {
                 selected.add(guid);
                 adjust_selected_pics(false, [ guid ]);
@@ -284,6 +286,8 @@ $(document).ready(function() {
     $('#filtertext').on('change', evhan_filtertext_commit);
 
     $('.PhotoGrid').on('click', evhan_click_background);
+
+    //### undo? https://github.com/samthor/undoer
     
     jQuery.ajax('/phogg/api/getpics', {
         dataType: 'json',
