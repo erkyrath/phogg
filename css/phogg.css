@@ -56,8 +56,9 @@ body {
     left: 0px;
     right: 0px;
     top: 0px;
-    height: 40px;
-    background-color: #EEE;
+    height: 39px;
+    background-color: white;
+    border-bottom: 1px solid #CCC;
 }
 
 #photopane {
@@ -170,6 +171,8 @@ body {
 }
 
 .FilterControl input {
+    border: 2px solid #CCC;
+    border-radius: 4px;
     font-size: 100%;
 }
 
