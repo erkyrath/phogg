@@ -41,7 +41,7 @@ body {
     width: 20%;
     height: 100%;
     overflow-y: scroll;
-    background-color: #EEE;
+    background-color: #DDD;
 }
 
 #maincol {
@@ -128,7 +128,6 @@ body {
 
 .PhotoCell .Tags {
     font-size: 85%;
-    font-style: italic;
     padding: 6px 10px;
 }
 
@@ -172,4 +171,26 @@ body {
 
 .FilterControl input {
     font-size: 100%;
+}
+
+.ToolBox {
+    border: 1px solid #CCC;
+    background: white;
+    margin: 10px;
+    padding: 6px;
+}
+
+.ToolBox .Label {
+    font-size: 85%;
+    text-decoration: underline;
+    margin-bottom: 6px;
+}
+
+.ToolBox .Tag {
+    display: inline-block;
+    font-size: 85%;
+    background-color: #E0E0E0;
+    margin: 2px;
+    padding: 2px 4px;
+    border-radius: 4px;
 }
