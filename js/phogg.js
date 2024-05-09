@@ -73,7 +73,14 @@ function build_pic_el(pic)
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
     var tagtext = '';
     if (pic.tags) {
-        tagtext = pic.tags.join(', ');
+        var showtags = [];
+        for (var tag of pic.tags) {
+            if (!alltagmap.get(tag).autogen) {
+                showtags.push(tag);
+            }
+        }
+        if (showtags.length)
+            tagtext = showtags.join(', ');
     }
     cellel.append($('<div>', { class:'Tags' }).text(tagtext));
     
