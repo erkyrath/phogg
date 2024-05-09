@@ -8,6 +8,7 @@ var allpicmap = new Map();
 
 var selected = new Set();
 var displayed = new Set();
+var lastselectanchor = -1;
 
 var imagesize = 180; // 110, 180, 360
 
@@ -16,6 +17,7 @@ var filtertext = null;
 function rebuild_pics()
 {
     displayed.clear();
+    lastselectanchor = -1;
     
     var ls = [];
     var index = 0;
@@ -137,6 +139,7 @@ function evhan_api_getpics(data, status, jqreq)
     allpicmap.clear();
     displayed.clear();
     selected.clear();
+    lastselectanchor = -1;
     
     if (data.pics) {
         allpics = data.pics;
@@ -201,7 +204,6 @@ function evhan_imageclick(ev)
 {
     var guid = ev.data.guid;
     var index = ev.data.index;
-    console.log('### image click', index, ev);
 
     ev.preventDefault();
     ev.stopPropagation();
@@ -215,7 +217,40 @@ function evhan_imageclick(ev)
         }
         adjust_selected_pics(false, [ guid ]);
     }
+    else if (ev.shiftKey) {
+        console.log('### anchor', lastselectanchor);
+        if (lastselectanchor == -1) {
+            lastselectanchor = index;
+            if (!selected.has(guid)) {
+                selected.add(guid);
+                adjust_selected_pics(false, [ guid ]);
+            }
+        }
+        else {
+            var newls = [];
+            if (index < lastselectanchor) {
+                for (var guid of displayed) {
+                    var pic = allpicmap.get(guid);
+                    if (pic.index >= index && pic.index <= lastselectanchor)
+                        newls.push(guid);
+                }
+            }
+            else {
+                for (var guid of displayed) {
+                    var pic = allpicmap.get(guid);
+                    if (pic.index >= lastselectanchor && pic.index <= index)
+                        newls.push(guid);
+                }
+            }
+            selected.clear();
+            for (var guid of newls) {
+                selected.add(guid);
+            }
+            adjust_selected_pics(true, newls);
+        }
+    }
     else {
+        lastselectanchor = index;
         if (!selected.has(guid)) {
             selected.clear();
             selected.add(guid);
@@ -233,6 +268,7 @@ function evhan_click_background(ev)
     ev.preventDefault();
     ev.stopPropagation();
 
+    lastselectanchor = -1;
     if (selected.size) {
         selected.clear();
         adjust_selected_pics(true, []);
