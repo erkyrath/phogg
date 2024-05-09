@@ -144,10 +144,20 @@ function rebuild_selected_tags()
     tagls.sort(tagname_sort_func);
 
     for (var tag of tagls) {
-        var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
-        el.text(tag);
+        var el = build_tag_el(tag, false);
         boxel.append(el);
     }
+}
+
+function build_tag_el(tag, allbox)
+{
+    var id = (allbox ? 'alltag-'+tag : 'seltag-'+tag);
+    var cla = (allbox ? 'AllBoxTag' : 'SelBoxTag');
+    
+    var el = $('<div>', { id:id, class:'Tag '+cla });
+    el.text(tag);
+    
+    return el;
 }
 
 function adjust_selected_pics(clearall, guids)
@@ -174,8 +184,7 @@ function rebuild_alltags()
     boxel.empty();
     for (var tagobj of alltags) {
         var tag = tagobj.tag;
-        var el = $('<div>', { id:'seltag-'+tag, class:'Tag' });
-        el.text(tag);
+        var el = build_tag_el(tag, true);
         boxel.append(el);
     }
 }
