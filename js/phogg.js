@@ -224,6 +224,19 @@ function rebuild_alltags()
     }
 }
 
+function check_new_tag(tag)
+{
+    if (alltagmap.get(tag.tag))
+        return;
+
+    alltags.push(tag);
+    alltagmap.set(tag.tag, tag);
+    alltags.sort(tagobj_sort_func);
+
+    rebuild_alltags();
+    rebuild_selected_tags();
+}
+
 function evhan_api_getpics(data, status, jqreq)
 {
     alltags = [];
