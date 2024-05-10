@@ -2,6 +2,7 @@
 
 var alltags = [];
 var alltagmap = new Map();
+var alltagmarks = new Map();
 
 var allpics = [];
 var allpicmap = new Map();
@@ -139,6 +140,7 @@ function rebuild_and_mark_tags()
     var boxel = $('.SelectedTagBox');
     boxel.empty();
 
+    alltagmarks.clear();
     var allchecks = $('.Tag input');
     allchecks.prop('checked', false);
     allchecks.prop('indeterminate', null);
@@ -162,12 +164,14 @@ function rebuild_and_mark_tags()
         var chel1 = $('#seltag-'+tagkey+' input');
         var chel2 = $('#alltag-'+tagkey+' input');
         if (tagset.get(tag) == viscount) {
+            alltagmarks.set(tag, 'ALL');
             chel1.prop('checked', true);
             chel2.prop('checked', true);
             chel1.prop('indeterminate', false);
             chel2.prop('indeterminate', false);
         }
         else {
+            alltagmarks.set(tag, 'SOME');
             chel1.prop('checked', false);
             chel2.prop('checked', false);
             chel1.prop('indeterminate', true);
@@ -271,7 +275,7 @@ function evhan_api_getpics(data, status, jqreq)
     rebuild_pics();
 }
 
-function evhan_api_update(data, status, jqreq)
+function evhan_api_settags(data, status, jqreq)
 {
     var tag = data.tag;
     var guids = data.guids;
@@ -407,7 +411,37 @@ function evhan_click_image(ev)
 function evhan_click_tag(ev)
 {
     var tag = ev.data.tag;
-    console.log('### tag', tag);
+
+    var guids = [];
+    
+    for (var guid of selected) {
+        if (!displayed.has(guid))
+            continue;
+        guids.push(guid);
+    }
+
+    if (!guids.length)
+        return;
+
+    var flag = true;
+    if (alltagmarks.get(tag) == 'ALL')
+        flag = false;
+    
+    var dat = {
+        tag: tag,
+        guids: guids,
+        flag: flag,
+    };
+
+    console.log('### settags', dat);
+    
+    jQuery.ajax('/phogg/api/settags', {
+        method: 'POST',
+        dataType: 'json',
+        data: dat,
+        success: evhan_api_settags,
+        error: evhan_api_error,
+    });
 }
 
 function evhan_click_background(ev)
