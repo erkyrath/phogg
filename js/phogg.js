@@ -253,6 +253,14 @@ function check_new_tag(tag)
     rebuild_and_mark_tags();
 }
 
+function add_recent_tag(tag)
+{
+    if (!recenttags.includes(tag)) {
+        recenttags.splice(0, 0, tag);
+        rebuild_and_mark_tags();
+    }
+}
+
 function evhan_api_getpics(data, status, jqreq)
 {
     if (data.error) {
@@ -451,6 +459,9 @@ function evhan_click_tag(ev)
     var flag = true;
     if (alltagmarks.get(tag) == 'ALL')
         flag = false;
+
+    if (flag)
+        add_recent_tag(tag);
     
     var dat = {
         tag: tag,
