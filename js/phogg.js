@@ -233,6 +233,7 @@ function check_new_tag(tag)
     if (alltagmap.get(tag.tag))
         return;
 
+    console.log('### adding new tag', tag);
     alltags.push(tag);
     alltagmap.set(tag.tag, tag);
     alltags.sort(tagobj_sort_func);
@@ -298,12 +299,15 @@ function evhan_api_settags(data, status, jqreq)
         if (!pic)
             continue;
         if (flag) {
-            if (!pic.tags.includes(tag.tag))
+            if (!pic.tags.includes(tag.tag)) {
                 pic.tags.push(tag.tag);
+            }
         }
         else {
-            if (pic.tags.includes(tag.tag))
-                pic.tags.pop(tag.tag);
+            var pos = pic.tags.indexOf(tag.tag);
+            if (pos >= 0) {
+                pic.tags.splice(pos, 1);
+            }
         }
     }
 
