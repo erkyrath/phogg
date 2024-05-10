@@ -285,6 +285,7 @@ function evhan_api_settags(data, status, jqreq)
         console.log('### error:', data.error);
         return;
     }
+    console.log('### response', data);
     
     var tag = data.tag;
     var guids = data.guids;
