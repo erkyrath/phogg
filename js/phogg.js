@@ -48,7 +48,7 @@ function rebuild_pics()
         parel.append(build_pic_el(pic));
     }
 
-    rebuild_selected_tags();
+    rebuild_and_mark_tags();
 }
 
 function build_pic_el(pic)
@@ -116,7 +116,7 @@ function resize_all_pics()
     }
 }
 
-function rebuild_selected_tags()
+function rebuild_and_mark_tags()
 {
     var tagset = new Map();
     var viscount = 0;
@@ -210,7 +210,7 @@ function adjust_selected_pics(clearall, guids)
         }
     }
 
-    rebuild_selected_tags();
+    rebuild_and_mark_tags();
 }
 
 function rebuild_alltags()
@@ -234,7 +234,7 @@ function check_new_tag(tag)
     alltags.sort(tagobj_sort_func);
 
     rebuild_alltags();
-    rebuild_selected_tags();
+    rebuild_and_mark_tags();
 }
 
 function evhan_api_getpics(data, status, jqreq)
@@ -271,8 +271,36 @@ function evhan_api_getpics(data, status, jqreq)
     rebuild_pics();
 }
 
+function evhan_api_update(data, status, jqreq)
+{
+    var tag = data.tag;
+    var guids = data.guids;
+    var flag = data.flag;
+    
+    check_new_tag(tag);
+
+    for (var guid of guids) {
+        var pic = allpicmap.get(guid);
+        if (!pic)
+            continue;
+        if (flag) {
+            if (!pic.tags.includes(tag.tag))
+                pic.tags.push(tag.tag);
+        }
+        else {
+            if (pic.tags.includes(tag.tag))
+                pic.tags.pop(tag.tag);
+        }
+    }
+
+    //### or: bang the pic tags lines, then rebuild_and_mark_tags()
+    rebuild_alltags();
+    rebuild_pics();
+}
+
 function evhan_api_error(jqreq, status, error)
 {
+    //### pop up somewhere
     console.log('### request error', jqreq.status, status, error);
 }
 
