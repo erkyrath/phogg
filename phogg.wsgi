@@ -33,12 +33,18 @@ class han_GetPics(ReqHandler):
             'tags': [ tag.tojson() for tag in tagls ],
         }
         yield(json.dumps(dat))
-    
+
+class han_SetTags(ReqHandler):
+    def do_post(self, req):
+        dat = { 'error': 'Yow!' }
+        yield(json.dumps(dat))
+
 config = {} ###
 
 appinstance = PhoggApp(config, [
     ('', han_Home),
     ('/api/getpics', han_GetPics),
+    ('/api/settags', han_SetTags),
 ])
 
 application = appinstance.application

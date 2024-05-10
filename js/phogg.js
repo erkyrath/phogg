@@ -243,6 +243,10 @@ function check_new_tag(tag)
 
 function evhan_api_getpics(data, status, jqreq)
 {
+    if (data.error) {
+        console.log('### error:', data.error);
+    }
+    
     alltags = [];
     alltagmap.clear();
 
@@ -277,6 +281,11 @@ function evhan_api_getpics(data, status, jqreq)
 
 function evhan_api_settags(data, status, jqreq)
 {
+    if (data.error) {
+        console.log('### error:', data.error);
+        return;
+    }
+    
     var tag = data.tag;
     var guids = data.guids;
     var flag = data.flag;
