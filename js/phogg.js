@@ -206,6 +206,10 @@ function build_tag_el(tag, box)
     if (!(tagobj && tagobj.autogen)) {
         el.on('click', { tag:tag }, evhan_click_tag);
     }
+    else {
+        el.addClass('AutoGen');
+        checkel.prop('disabled', true);
+    }
 
     return el;
 }

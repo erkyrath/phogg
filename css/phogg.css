@@ -208,3 +208,7 @@ body {
 .ToolBox .Tag input {
     pointer-events: none;
 }
+
+.ToolBox .Tag.AutoGen {
+    color: #666;
+}
