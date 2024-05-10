@@ -161,21 +161,16 @@ function rebuild_and_mark_tags()
 
     for (var tag of tagls) {
         var tagkey = tag.replace(':', '__');
-        var chel1 = $('#seltag-'+tagkey+' input');
-        var chel2 = $('#alltag-'+tagkey+' input');
+        var tagels = $('.Tag__'+tagkey+' input');
         if (tagset.get(tag) == viscount) {
             alltagmarks.set(tag, 'ALL');
-            chel1.prop('checked', true);
-            chel2.prop('checked', true);
-            chel1.prop('indeterminate', false);
-            chel2.prop('indeterminate', false);
+            tagels.prop('checked', true);
+            tagels.prop('indeterminate', false);
         }
         else {
             alltagmarks.set(tag, 'SOME');
-            chel1.prop('checked', false);
-            chel2.prop('checked', false);
-            chel1.prop('indeterminate', true);
-            chel2.prop('indeterminate', true);
+            tagels.prop('checked', false);
+            tagels.prop('indeterminate', true);
         }
     }
 }
@@ -184,9 +179,9 @@ function build_tag_el(tag, allbox)
 {
     var tagkey = tag.replace(':', '__');
     var id = (allbox ? 'alltag-'+tagkey : 'seltag-'+tagkey);
-    var cla = (allbox ? 'AllBoxTag' : 'SelBoxTag');
+    var cla = 'Tag ' + 'Tag__'+tagkey + ' ' + (allbox ? 'AllBoxTag' : 'SelBoxTag');
     
-    var el = $('<div>', { id:id, class:'Tag '+cla });
+    var el = $('<div>', { id:id, class:cla });
     var checkel = $('<input>', { type:'checkbox' });
     el.append(checkel);
     el.append($('<span>').text(tag));
