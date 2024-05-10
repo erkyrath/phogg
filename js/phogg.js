@@ -3,6 +3,7 @@
 var alltags = [];
 var alltagmap = new Map();
 var alltagmarks = new Map();
+var recenttags = [];
 
 var allpics = [];
 var allpicmap = new Map();
@@ -136,6 +137,14 @@ function rebuild_and_mark_tags()
             }
         }
     }
+
+    var boxel = $('.RecentTagBox');
+    boxel.empty();
+
+    for (var tag of recenttags) {
+        var el = build_tag_el(tag, 'rectag');
+        boxel.append(el);
+    }
     
     var boxel = $('.SelectedTagBox');
     boxel.empty();
@@ -155,7 +164,7 @@ function rebuild_and_mark_tags()
     tagls.sort(tagname_sort_func);
 
     for (var tag of tagls) {
-        var el = build_tag_el(tag, false);
+        var el = build_tag_el(tag, 'seltag');
         boxel.append(el);
     }
 
@@ -175,11 +184,18 @@ function rebuild_and_mark_tags()
     }
 }
 
-function build_tag_el(tag, allbox)
+function build_tag_el(tag, box)
 {
     var tagkey = tag.replace(':', '__');
-    var id = (allbox ? 'alltag-'+tagkey : 'seltag-'+tagkey);
-    var cla = 'Tag ' + 'Tag__'+tagkey + ' ' + (allbox ? 'AllBoxTag' : 'SelBoxTag');
+    var id = box+'-'+tagkey;
+    
+    var cla = 'Tag ' + 'Tag__'+tagkey;
+    if (box == 'alltag')
+        cla += ' AllBoxTag';
+    else if (box == 'rectag')
+        cla += ' RecentBoxTag';
+    else if (box == 'seltag')
+        cla += ' SelBoxTag';
     
     var el = $('<div>', { id:id, class:cla });
     var checkel = $('<input>', { type:'checkbox' });
@@ -218,7 +234,7 @@ function rebuild_alltags()
     boxel.empty();
     for (var tagobj of alltags) {
         var tag = tagobj.tag;
-        var el = build_tag_el(tag, true);
+        var el = build_tag_el(tag, 'alltag');
         boxel.append(el);
     }
 }
