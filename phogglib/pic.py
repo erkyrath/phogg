@@ -30,6 +30,9 @@ class Pic:
         else:
             self.dirtag = None
 
+    def __repr__(self):
+        return '<Pic "%s" %s>' % (self.pathname, self.guid,)
+
     def fetchtags(self, app):
         curs = app.getdb().cursor()
         res = curs.execute('SELECT tag FROM assoc WHERE guid = ?', (self.guid,))
@@ -56,12 +59,14 @@ def do_scandir(app):
     
     curs = app.getdb().cursor()
     counter = 0
+    foundfiles = set()
     
     for (dirpath, dirnames, filenames) in os.walk(app.pic_path):
         for filename in filenames:
             counter += 1
             pathname = os.path.join(dirpath, filename)
             rpathname = os.path.relpath(pathname, start=app.pic_path)
+            foundfiles.add(rpathname)
             
             res = curs.execute('SELECT guid FROM pics WHERE pathname = ?', (rpathname,))
             tup = res.fetchone()
@@ -89,6 +94,7 @@ def do_scandir(app):
 
             pictup = (guid, rpathname, filetype, width, height, int(sta.st_mtime))
             pic = Pic(*pictup)
+            print('### adding %s' % (pic,)) ###log?
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', pictup)
             curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
             
@@ -105,6 +111,12 @@ def do_scandir(app):
     for tag in newtags:
         curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, True))
 
+    res = curs.execute('SELECT guid, pathname FROM pics')
+    ls = [ tup for tup in res.fetchall() ]
+    for (guid, rpathname) in ls:
+        if rpathname not in foundfiles:
+            print('### removing %s' % (rpathname,)) ###log?
+            curs.execute('DELETE FROM pics WHERE guid = ?', (guid,))
 
 def do_exportfiles(app):
     curs = app.getdb().cursor()
