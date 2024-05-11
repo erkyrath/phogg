@@ -450,7 +450,7 @@ function evhan_api_settags(data, status, jqreq)
     }
 
     //### or: bang the pic tags lines, then rebuild_and_mark_tags()
-    rebuild_alltags();
+    //### except that if the filter is affected, we really do need rebuild_pics().
     rebuild_pics();
 }
 
