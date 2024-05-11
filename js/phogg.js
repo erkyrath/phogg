@@ -21,37 +21,12 @@ function rebuild_pics()
 {
     displayed.clear();
     lastselectanchor = -1;
+
+    var guids = get_visible();
     
-    var ls = [];
     var index = 0;
-    for (var pic of allpics) {
-        pic.index = -1;
-
-        if (filtertext != null) {
-            var anymatch = false;
-            for (var tag of pic.tags) {
-                if (tag.includes(filtertext)) {
-                    anymatch = true;
-                    break;
-                }
-            }
-            if (!anymatch)
-                continue;
-        }
-
-        if (filtertags.length) {
-            var allmatch = true;
-            for (var ftag of filtertags) {
-                if (!pic.tags.includes(ftag)) {
-                    allmatch = false;
-                    break;
-                }
-            }
-            if (!allmatch)
-                continue;
-        }
-        
-        ls.push(pic);
+    for (var guid of guids) {
+        var pic = allpicmap.get(guid);
         displayed.add(pic.guid);
         pic.index = index;
         index++;
@@ -59,7 +34,9 @@ function rebuild_pics()
     
     var parel = $('.PhotoGrid');
     parel.empty();
-    for (var pic of ls) {
+    
+    for (var guid of guids) {
+        var pic = allpicmap.get(guid);
         parel.append(build_pic_el(pic));
     }
 }
@@ -354,6 +331,41 @@ function remove_filter_tag(tag)
     }
 }
 
+function get_visible()
+{
+    var guids = [];
+    
+    for (var pic of allpics) {
+        if (filtertext != null) {
+            var anymatch = false;
+            for (var tag of pic.tags) {
+                if (tag.includes(filtertext)) {
+                    anymatch = true;
+                    break;
+                }
+            }
+            if (!anymatch)
+                continue;
+        }
+
+        if (filtertags.length) {
+            var allmatch = true;
+            for (var ftag of filtertags) {
+                if (!pic.tags.includes(ftag)) {
+                    allmatch = false;
+                    break;
+                }
+            }
+            if (!allmatch)
+                continue;
+        }
+        
+        guids.push(pic.guid);
+    }
+
+    return guids;
+}
+
 function get_selected()
 {
     var guids = [];
@@ -451,7 +463,7 @@ function evhan_api_settags(data, status, jqreq)
     }
 
     //### or: bang the pic tags lines, then rebuild_and_mark_tags()
-    //### except that if the filter is affected, we really do need rebuild_pics().
+    //### except that if the filter is affected (!flag, a pic fell out of the filter), we really do need rebuild_pics().
     rebuild_pics();
     rebuild_and_mark_tags();
 }
