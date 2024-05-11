@@ -455,6 +455,31 @@ function evhan_filtertext_commit()
     console.log('### filter commit:', filter);
 }
 
+function evhan_filtertext_keydown(ev)
+{
+    if (ev.key == 'Enter') {
+        ev.preventDefault();
+        
+        var newtag = $('#filtertext').val();
+        newtag = newtag.trim();
+        
+        //###$('#filtertext').val('');
+        console.log('### commit filter', newtag);
+        return;
+    }
+    
+    if (ev.key == 'Tab') {
+        ev.preventDefault();
+
+        var newtag = $('#filtertext').val();
+        newtag = newtag.trim();
+        var val = tab_completion(newtag);
+        $('#filtertext').val(val);
+
+        return;
+    }
+}
+
 function evhan_newtag_keydown(ev)
 {
     if (ev.key == 'Enter') {
@@ -623,7 +648,7 @@ $(document).ready(function() {
     $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
 
     $('#filtertext').on('input', evhan_filtertext_change);
-    //$('#filtertext').on('keydown', evhan_filtertext_commit);
+    $('#filtertext').on('keydown', evhan_filtertext_keydown);
     
     $('#newtagtext').on('keydown', evhan_newtag_keydown);
 
