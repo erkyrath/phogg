@@ -265,6 +265,19 @@ function add_recent_tag(tag)
     }
 }
 
+function get_selected()
+{
+    var guids = [];
+    
+    for (var guid of selected) {
+        if (!displayed.has(guid))
+            continue;
+        guids.push(guid);
+    }
+
+    return guids;
+}
+
 function evhan_api_getpics(data, status, jqreq)
 {
     if (data.error) {
@@ -464,14 +477,7 @@ function evhan_click_tag(ev)
 {
     var tag = ev.data.tag;
 
-    var guids = [];
-    
-    for (var guid of selected) {
-        if (!displayed.has(guid))
-            continue;
-        guids.push(guid);
-    }
-
+    var guids = get_selected();
     if (!guids.length)
         return;
 
