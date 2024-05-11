@@ -11,6 +11,9 @@ def run(appinstance):
     popt_scan = subopt.add_parser('scan', help='scan photo dir')
     popt_scan.set_defaults(cmdfunc=cmd_scan)
     
+    popt_cleantags = subopt.add_parser('cleantags', help='remove unused tags')
+    popt_cleantags.set_defaults(cmdfunc=cmd_cleantags)
+    
     args = popt.parse_args()
 
     if not args.cmd:
@@ -46,3 +49,23 @@ def cmd_createdb(args, app):
 def cmd_scan(args, app):
     app.scandir(force=True)
     
+def cmd_cleantags(args, app):
+    curs = app.getdb().cursor()
+    res = curs.execute('SELECT tag FROM tags')
+    alltags = [ tag[0] for tag in res.fetchall() ]
+
+    removed = []
+    for tag in alltags:
+        res = curs.execute('SELECT guid FROM assoc WHERE tag = ?', (tag,))
+        if not res.fetchone():
+            removed.append(tag)
+
+    if not removed:
+        print('no unused tags')
+        return
+
+    print('removing %d tags: %s' % (len(removed), ', '.join(removed),))
+    for tag in removed:
+        curs.execute('DELETE FROM tags WHERE tag = ?', (tag,))
+        
+          
