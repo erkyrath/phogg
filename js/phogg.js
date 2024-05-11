@@ -385,6 +385,21 @@ function evhan_filtertext_commit()
     console.log('### filter commit:', filter);
 }
 
+function evhan_newtagtext_commit()
+{
+    var newtag = $('#newtagtext').val();
+    newtag = newtag.trim();
+
+    $('#newtagtext').val('');
+    
+    if (!newtag.length)
+        return;
+
+    recenttags.splice(0, 0, newtag);
+    check_new_tag({ tag:newtag, autogen:false });
+    rebuild_and_mark_tags();
+}
+
 function evhan_click_image(ev)
 {
     var guid = ev.data.guid;
@@ -534,6 +549,7 @@ $(document).ready(function() {
 
     $('#filtertext').on('input', evhan_filtertext_change);
     $('#filtertext').on('change', evhan_filtertext_commit);
+    $('#newtagtext').on('change', evhan_newtagtext_commit);
 
     $('.PhotoGrid').on('click', evhan_click_background);
 
