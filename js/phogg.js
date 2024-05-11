@@ -62,8 +62,6 @@ function rebuild_pics()
     for (var pic of ls) {
         parel.append(build_pic_el(pic));
     }
-
-    rebuild_and_mark_tags();
 }
 
 function build_pic_el(pic)
@@ -341,6 +339,7 @@ function add_filter_tag(tag)
         filtertags.push(tag);
         rebuild_filtertags();
         rebuild_pics();
+        rebuild_and_mark_tags();
     }
 }
 
@@ -351,6 +350,7 @@ function remove_filter_tag(tag)
         filtertags.splice(pos, 1);
         rebuild_filtertags();
         rebuild_pics();
+        rebuild_and_mark_tags();
     }
 }
 
@@ -416,6 +416,7 @@ function evhan_api_getpics(data, status, jqreq)
 
     rebuild_alltags();
     rebuild_pics();
+    rebuild_and_mark_tags();
 }
 
 function evhan_api_settags(data, status, jqreq)
@@ -452,6 +453,7 @@ function evhan_api_settags(data, status, jqreq)
     //### or: bang the pic tags lines, then rebuild_and_mark_tags()
     //### except that if the filter is affected, we really do need rebuild_pics().
     rebuild_pics();
+    rebuild_and_mark_tags();
 }
 
 function evhan_api_error(jqreq, status, error)
@@ -487,6 +489,7 @@ function evhan_filtertext_change()
     if (filtertext != filter) {
         filtertext = filter;
         rebuild_pics();
+        rebuild_and_mark_tags();
     }
 }
 
