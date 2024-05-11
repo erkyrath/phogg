@@ -632,8 +632,7 @@ function evhan_click_tag(ev)
     if (alltagmarks.get(tag) == 'ALL')
         flag = false;
 
-    if (flag)
-        add_recent_tag(tag);
+    add_recent_tag(tag);
     
     var dat = {
         tag: tag,
