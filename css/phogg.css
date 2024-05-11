@@ -220,3 +220,19 @@ body {
 .ToolBox .Tag.AutoGen {
     color: #666;
 }
+
+#errorpane {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width: 30%;
+    pointer-events: none;
+}
+
+#errorpane .ErrorMsg {
+    background-color: #FAA;
+    margin: 6px 6px;
+    border: 2px solid white;
+    border-radius: 8px;
+    padding: 8px 12px;
+}

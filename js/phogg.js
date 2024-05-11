@@ -308,6 +308,19 @@ function get_selected()
     return guids;
 }
 
+function display_error(msg)
+{
+    console.log('Error: ' + msg);
+    
+    var el = $('<div>', { class:'ErrorMsg' }).text(msg);
+    el.hide();
+    $('#errorpane').append(el);
+
+    el.slideDown(300).delay(2000).slideUp(300, function() {
+        el.remove();
+    });
+}
+
 function evhan_api_getpics(data, status, jqreq)
 {
     if (data.error) {
