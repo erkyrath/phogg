@@ -243,6 +243,36 @@ function rebuild_alltags()
     }
 }
 
+
+function accept_new_tag(newtag)
+{
+    add_recent_tag(newtag);
+    
+    var guids = get_selected();
+
+    if (guids.length == 0) {
+        check_new_tag({ tag:newtag, autogen:false });
+        rebuild_and_mark_tags();
+    }
+    else {
+        var dat = {
+            tag: newtag,
+            guids: guids,
+            flag: true,
+        };
+
+        console.log('### settags', dat);
+        
+        jQuery.ajax('/phogg/api/settags', {
+            method: 'POST',
+            dataType: 'json',
+            data: dat,
+            success: evhan_api_settags,
+            error: evhan_api_error,
+        });
+    }
+}
+
 function check_new_tag(tag)
 {
     if (alltagmap.get(tag.tag))
@@ -276,6 +306,11 @@ function get_selected()
     }
 
     return guids;
+}
+
+function tab_completion(val)
+{
+    return 'cheese'; //###
 }
 
 function evhan_api_getpics(data, status, jqreq)
@@ -398,40 +433,30 @@ function evhan_filtertext_commit()
     console.log('### filter commit:', filter);
 }
 
-function evhan_newtagtext_commit()
+function evhan_newtag_keydown(ev)
 {
-    var newtag = $('#newtagtext').val();
-    newtag = newtag.trim();
-
-    $('#newtagtext').val('');
-    
-    if (!newtag.length)
-        return;
-
-    add_recent_tag(newtag);
-    
-    var guids = get_selected();
-
-    if (guids.length == 0) {
-        check_new_tag({ tag:newtag, autogen:false });
-        rebuild_and_mark_tags();
-    }
-    else {
-        var dat = {
-            tag: newtag,
-            guids: guids,
-            flag: true,
-        };
-
-        console.log('### settags', dat);
+    if (ev.key == 'Enter') {
+        ev.preventDefault();
         
-        jQuery.ajax('/phogg/api/settags', {
-            method: 'POST',
-            dataType: 'json',
-            data: dat,
-            success: evhan_api_settags,
-            error: evhan_api_error,
-        });
+        var newtag = $('#newtagtext').val();
+        newtag = newtag.trim();
+        
+        $('#newtagtext').val('');
+        
+        if (newtag.length)
+            accept_new_tag(newtag);
+        return;
+    }
+    
+    if (ev.key == 'Tab') {
+        ev.preventDefault();
+
+        var newtag = $('#newtagtext').val();
+        newtag = newtag.trim();
+        var val = tab_completion(newtag);
+        $('#newtagtext').val(val);
+
+        return;
     }
 }
 
@@ -576,8 +601,9 @@ $(document).ready(function() {
     $('#imgsize-l').on('change', { size:360, key:'Large' }, evhan_select_size);
 
     $('#filtertext').on('input', evhan_filtertext_change);
-    $('#filtertext').on('change', evhan_filtertext_commit);
-    $('#newtagtext').on('change', evhan_newtagtext_commit);
+    //$('#filtertext').on('keydown', evhan_filtertext_commit);
+    
+    $('#newtagtext').on('keydown', evhan_newtag_keydown);
 
     $('.PhotoGrid').on('click', evhan_click_background);
 
