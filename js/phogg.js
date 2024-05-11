@@ -490,15 +490,6 @@ function evhan_filtertext_change()
     }
 }
 
-function evhan_filtertext_commit()
-{
-    var filter = $('#filtertext').val();
-    if (!filter.length)
-        return;
-    
-    console.log('### filter commit:', filter);
-}
-
 function evhan_filtertext_keydown(ev)
 {
     if (ev.key == 'Enter') {
@@ -506,9 +497,12 @@ function evhan_filtertext_keydown(ev)
         
         var newtag = $('#filtertext').val();
         newtag = newtag.trim();
-        
-        //###$('#filtertext').val('');
-        console.log('### commit filter', newtag);
+
+        if (alltagmap.has(newtag)) {
+            $('#filtertext').val('');
+            filtertext = null;
+            add_filter_tag(newtag);
+        }
         return;
     }
     
