@@ -17,6 +17,7 @@ class PhoggApp(TinyApp):
 
         ###
         self.approot = '/phogg'
+        self.pic_uri = '/testpics'
         self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
         self.template_path = '/Users/zarf/src/phogg/templates'
         self.pic_path = '/Users/zarf/src/phogg/testpics'

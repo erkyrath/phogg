@@ -12,7 +12,7 @@ from phogglib.tag import Tag
 class han_Home(ReqHandler):
     def do_get(self, req):
         self.app.scandir()
-        return self.app.render('main.html', req)
+        return self.app.render('main.html', req, pic_uri=json.dumps(self.app.pic_uri))
 
 class han_GetPics(ReqHandler):
     def do_get(self, req):
