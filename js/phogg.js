@@ -38,6 +38,18 @@ function rebuild_pics()
             if (!anymatch)
                 continue;
         }
+
+        if (filtertags.length) {
+            var allmatch = true;
+            for (var ftag of filtertags) {
+                if (!pic.tags.includes(ftag)) {
+                    allmatch = false;
+                    break;
+                }
+            }
+            if (!allmatch)
+                continue;
+        }
         
         ls.push(pic);
         displayed.add(pic.guid);
@@ -328,6 +340,7 @@ function add_filter_tag(tag)
     if (pos < 0) {
         filtertags.push(tag);
         rebuild_filtertags();
+        rebuild_pics();
     }
 }
 
@@ -337,6 +350,7 @@ function remove_filter_tag(tag)
     if (pos >= 0) {
         filtertags.splice(pos, 1);
         rebuild_filtertags();
+        rebuild_pics();
     }
 }
 
