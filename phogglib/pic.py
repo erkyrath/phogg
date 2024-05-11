@@ -2,6 +2,7 @@ import os, os.path
 import uuid
 import pytz
 import datetime
+import json
 
 tz_utc = pytz.timezone('UTC')
 
@@ -128,6 +129,11 @@ def do_exportfiles(app):
         fl.write(': ')
         fl.write(', '.join(tagls))
         fl.write('\n')
+    fl.close()
+
+    dat = { 'pics': [ pic.tojson() for pic in picls ] }
+    fl = open(os.path.join(app.export_path, 'picmap.json'), 'w')
+    json.dump(dat, fl, indent=2)
     fl.close()
         
 def parse_png(pathname):
