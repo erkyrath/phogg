@@ -408,9 +408,31 @@ function evhan_newtagtext_commit()
     if (!newtag.length)
         return;
 
-    recenttags.splice(0, 0, newtag);
-    check_new_tag({ tag:newtag, autogen:false });
-    rebuild_and_mark_tags();
+    add_recent_tag(newtag);
+    
+    var guids = get_selected();
+
+    if (guids.length == 0) {
+        check_new_tag({ tag:newtag, autogen:false });
+        rebuild_and_mark_tags();
+    }
+    else {
+        var dat = {
+            tag: newtag,
+            guids: guids,
+            flag: true,
+        };
+
+        console.log('### settags', dat);
+        
+        jQuery.ajax('/phogg/api/settags', {
+            method: 'POST',
+            dataType: 'json',
+            data: dat,
+            success: evhan_api_settags,
+            error: evhan_api_error,
+        });
+    }
 }
 
 function evhan_click_image(ev)
