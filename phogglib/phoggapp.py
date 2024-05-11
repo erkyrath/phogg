@@ -9,7 +9,7 @@ from tinyapp.app import TinyApp, TinyRequest
 from tinyapp.handler import ReqHandler
 import tinyapp.auth
 
-from phogglib.pic import do_scandir
+from phogglib.pic import do_scandir, do_exportfiles
 
 class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
@@ -20,6 +20,7 @@ class PhoggApp(TinyApp):
         self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
         self.template_path = '/Users/zarf/src/phogg/templates'
         self.pic_path = '/Users/zarf/src/phogg/testpics'
+        self.export_path = '/Users/zarf/src/phogg/export'
         
         # Thread-local storage for various things which are not thread-safe.
         self.threadcache = threading.local()
@@ -72,4 +73,7 @@ class PhoggApp(TinyApp):
     def scandir(self, force=False):
         ### timestamp check unless force (subdirs harder?)
         do_scandir(self)
+        
+    def exportfiles(self):
+        do_exportfiles(self)
         

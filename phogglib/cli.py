@@ -11,6 +11,9 @@ def run(appinstance):
     popt_scan = subopt.add_parser('scan', help='scan photo dir')
     popt_scan.set_defaults(cmdfunc=cmd_scan)
     
+    popt_export = subopt.add_parser('export', help='export db files')
+    popt_export.set_defaults(cmdfunc=cmd_export)
+    
     popt_cleantags = subopt.add_parser('cleantags', help='remove unused tags')
     popt_cleantags.set_defaults(cmdfunc=cmd_cleantags)
     
@@ -48,6 +51,9 @@ def cmd_createdb(args, app):
 
 def cmd_scan(args, app):
     app.scandir(force=True)
+    
+def cmd_export(args, app):
+    app.exportfiles()
     
 def cmd_cleantags(args, app):
     curs = app.getdb().cursor()

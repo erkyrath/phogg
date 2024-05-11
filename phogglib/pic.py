@@ -103,8 +103,33 @@ def do_scandir(app):
 
     for tag in newtags:
         curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, True))
-    
 
+
+def do_exportfiles(app):
+    curs = app.getdb().cursor()
+
+    tagauto = dict()
+    res = curs.execute('SELECT tag FROM tags where autogen = ?', (True,))
+    for tup in res.fetchall():
+        tagauto[tup[0]] = 1
+    
+    res = curs.execute('SELECT * FROM pics')
+    picls = [ Pic(*tup) for tup in res.fetchall() ]
+    picls.sort(key=lambda pic: pic.timestamp)
+
+    for pic in picls:
+        pic.fetchtags(app)
+
+    fl = open(os.path.join(app.export_path, 'picmap.txt'), 'w')
+    for pic in picls:
+        tagls = list(pic.tags)
+        tagls.sort(key=lambda tag: (tagauto.get(tag, 0), tag))
+        fl.write(pic.pathname)
+        fl.write(': ')
+        fl.write(', '.join(tagls))
+        fl.write('\n')
+    fl.close()
+        
 def parse_png(pathname):
     fl = open(pathname, 'rb')
     sig = fl.read(8)
