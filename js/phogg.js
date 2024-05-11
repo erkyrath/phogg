@@ -15,6 +15,7 @@ var lastselectanchor = -1;
 var imagesize = 180; // 110, 180, 360
 
 var filtertext = null;
+var filtertags = [];
 
 function rebuild_pics()
 {
@@ -118,6 +119,15 @@ function resize_all_pics()
     }
 }
 
+function rebuild_filtertags()
+{
+    $('.FilterControl .Tag').remove();
+    for (var tag of filtertags) {
+        var el = build_filtertag_el(tag);
+        $('.FilterControl').append(el);
+    }
+}
+
 function rebuild_and_mark_tags()
 {
     var tagset = new Map();
@@ -214,6 +224,23 @@ function build_tag_el(tag, box)
     return el;
 }
 
+function build_filtertag_el(tag)
+{
+    var tagkey = tag.replace(':', '__');
+
+    var el = $('<div>', { id:'filtag__'+tagkey, class:'Tag' });
+    el.append($('<span>').text(tag));
+
+    var delel = $('<a>', { href:'#', class:'TagClose' }).text('\u22A0');
+    delel.on('click', function(ev) {
+        ev.preventDefault();
+        remove_filter_tag(tag);
+    });
+    el.append(delel);
+    
+    return el;
+}
+
 function adjust_selected_pics(clearall, guids)
 {
     if (clearall) {
@@ -292,6 +319,24 @@ function add_recent_tag(tag)
     if (!recenttags.includes(tag)) {
         recenttags.splice(0, 0, tag);
         rebuild_and_mark_tags();
+    }
+}
+
+function add_filter_tag(tag)
+{
+    var pos = filtertags.indexOf(tag);
+    if (pos < 0) {
+        filtertags.push(tag);
+        rebuild_filtertags();
+    }
+}
+
+function remove_filter_tag(tag)
+{
+    var pos = filtertags.indexOf(tag);
+    if (pos >= 0) {
+        filtertags.splice(pos, 1);
+        rebuild_filtertags();
     }
 }
 

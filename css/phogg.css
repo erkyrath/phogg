@@ -221,6 +221,25 @@ body {
     color: #666;
 }
 
+.FilterControl .Tag {
+    display: inline-block;
+    font-size: 85%;
+    background-color: #E0E0E0;
+    margin: 2px;
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+.FilterControl .Tag .TagClose {
+    margin-left: 4px;
+    font-size: 85%;
+    text-decoration: none;
+    color: black;
+}
+.FilterControl .Tag .TagClose:hover {
+    color: #A00;
+}
+
 #errorpane {
     position: absolute;
     right: 0px;
