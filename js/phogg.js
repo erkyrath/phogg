@@ -324,7 +324,7 @@ function display_error(msg)
 function evhan_api_getpics(data, status, jqreq)
 {
     if (data.error) {
-        console.log('### error:', data.error);
+        display_error('getpics: ' + data.error);
     }
     
     alltags = [];
@@ -362,7 +362,7 @@ function evhan_api_getpics(data, status, jqreq)
 function evhan_api_settags(data, status, jqreq)
 {
     if (data.error) {
-        console.log('### error:', data.error);
+        display_error('settags: ' + data.error);
         return;
     }
     console.log('### response', data);
@@ -397,8 +397,7 @@ function evhan_api_settags(data, status, jqreq)
 
 function evhan_api_error(jqreq, status, error)
 {
-    //### pop up somewhere
-    console.log('### request error', jqreq.status, status, error);
+    display_error(jqreq.responseText);
 }
 
 function evhan_select_size(ev)
