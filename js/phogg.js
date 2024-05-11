@@ -310,7 +310,29 @@ function get_selected()
 
 function tab_completion(val)
 {
-    return 'cheese'; //###
+    var ls = [];
+    
+    for (var tag of alltags) {
+        if (tag.tag.startsWith(val)) {
+            ls.push(tag.tag);
+        }
+    }
+
+    if (!ls.length)
+        return val;
+
+    var newval = ls.pop();
+    for (var tag of ls) {
+        while (true) {
+            if (tag.startsWith(newval))
+                break;
+            newval = newval.slice(0, newval.length-1);
+        }
+        if (newval == val)
+            return newval;
+    }
+
+    return newval;
 }
 
 function evhan_api_getpics(data, status, jqreq)
