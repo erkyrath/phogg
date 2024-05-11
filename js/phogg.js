@@ -45,7 +45,7 @@ function build_pic_el(pic)
 {
     var cellel = $('<div>', { class:'PhotoCell', id:'cell-'+pic.guid });
     cellel.append($('<div>', { class:'Filename' }).text(pic.pathname));
-    var outel = $('<a>', { href:'testpics/'+pic.pathname, target:'_blank' }).text('\u21D7');
+    var outel = $('<a>', { href:pic_uri+'/'+pic.pathname, target:'_blank' }).text('\u21D7');
     cellel.append($('<div>', { class:'OutButton' }).append(outel));
 
     var width, height;
@@ -58,7 +58,7 @@ function build_pic_el(pic)
         width = Math.floor(imagesize * pic.aspect);
     }
     
-    var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:'testpics/'+pic.pathname, width:width, height:height });
+    var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:pic_uri+'/'+pic.pathname, width:width, height:height });
     cellel.append(imgel);
     imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_click_image);
 
