@@ -127,14 +127,14 @@ def do_scandir(app):
 def do_thumbnails(app):
     curs = app.getdb().cursor()
     
-    res = curs.execute('SELECT guid, type, pathname, thumbname FROM pics')
+    res = curs.execute('SELECT guid, type, orient, pathname, thumbname FROM pics')
     ls = [ tup for tup in res.fetchall() ]
 
-    for (guid, type, pathname, thumbname) in ls:
+    for (guid, type, orient, pathname, thumbname) in ls:
         src = os.path.join(app.pic_path, pathname)
         dest = os.path.join(app.thumb_path, pathname)
         if not os.path.exists(dest):
-            args = [ '/Users/zarf/src/phogg/thumbnail.py', src, dest, type ]
+            args = [ '/Users/zarf/src/phogg/thumbnail.py', src, dest, type, orient ]
             subprocess.run(args, check=True)
             print('### thumbnailing %s' % (pathname,)) ###log?
             
