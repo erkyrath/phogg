@@ -60,7 +60,7 @@ function build_pic_el(pic)
 
     var imguri;
     if (pic.thumbname)
-        imguri = 'testthumb'+'/'+pic.thumbname;
+        imguri = thumb_uri+'/'+pic.thumbname;
     else
         imguri = pic_uri+'/'+pic.pathname;
     
