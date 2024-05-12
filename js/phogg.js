@@ -57,8 +57,14 @@ function build_pic_el(pic)
         height = imagesize;
         width = Math.floor(imagesize * pic.aspect);
     }
+
+    var imguri;
+    if (pic.thumbname)
+        imguri = 'testthumb'+'/'+pic.thumbname;
+    else
+        imguri = pic_uri+'/'+pic.pathname;
     
-    var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:pic_uri+'/'+pic.pathname, width:width, height:height });
+    var imgel = $('<img>', { class:'Photo', id:'img-'+pic.guid, loading:'lazy', src:imguri, width:width, height:height });
     cellel.append(imgel);
     imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_click_image);
 

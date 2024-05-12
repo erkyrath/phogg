@@ -57,6 +57,8 @@ class Pic:
         }
         if self.tags:
             res['tags'] = list(self.tags)
+        if self.thumbname:
+            res['thumbname'] = self.thumbname
         return res
 
 def do_scandir(app):
