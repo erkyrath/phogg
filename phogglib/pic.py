@@ -8,12 +8,13 @@ import subprocess
 tz_utc = pytz.timezone('UTC')
 
 class Pic:
-    def __init__(self, guid, pathname, type, width, height, timestamp, thumbname=None):
+    def __init__(self, guid, pathname, type, width, height, orient, timestamp, thumbname=None):
         self.guid = guid
         self.pathname = pathname
         self.type = type
         self.width = width
         self.height = height
+        self.orient = orient  # NLRF
         self.timestamp = timestamp
         self.thumbname = None
         if thumbname:
@@ -87,19 +88,20 @@ def do_scandir(app):
                 if suffix == '.png':
                     filetype = 'png'
                     (width, height) = parse_png(pathname)
+                    orient = 'N'
                 elif suffix in ('.jpg', '.jpeg'):
                     filetype = 'jpeg'
-                    (width, height) = parse_jpeg(pathname)
+                    (width, height, orient) = parse_jpeg(pathname)
                 else:
                     continue
             except Exception as ex:
                 ### log somewhere?
                 continue
 
-            pictup = (guid, rpathname, filetype, width, height, int(sta.st_mtime))
+            pictup = (guid, rpathname, filetype, width, height, orient, int(sta.st_mtime))
             pic = Pic(*pictup)
             print('### adding %s' % (pic,)) ###log?
-            curs.execute('INSERT INTO pics (guid, pathname, type, width, height, timestamp) VALUES (?, ?, ?, ?, ?, ?)', pictup)
+            curs.execute('INSERT INTO pics (guid, pathname, type, width, height, orient, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)', pictup)
             curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
             
             curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.yeartag))
@@ -189,6 +191,7 @@ def parse_png(pathname):
 def parse_jpeg(pathname):
     fl = open(pathname, 'rb')
     orientation = 1
+    orimap = 'NNNFFRLLRN'
     while True:
         if fl.read(1)[0] != 0xFF:
             raise Exception('marker is not FF')
@@ -225,6 +228,6 @@ def parse_jpeg(pathname):
             fl.close()
             if orientation in (6, 8):
                 (width, height) = (height, width)
-            return (width, height)
+            return (width, height, orimap[orientation])
         fl.seek(clen-2, os.SEEK_CUR)
     raise Exception('SOF block not found')
