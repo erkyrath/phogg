@@ -134,9 +134,10 @@ def do_thumbnails(app):
         src = os.path.join(app.pic_path, pathname)
         dest = os.path.join(app.thumb_path, pathname)
         if not os.path.exists(dest):
+            print('### thumbnailing %s' % (pathname,)) ###log?
             args = [ '/Users/zarf/src/phogg/thumbnail.py', src, dest, type, orient ]
             subprocess.run(args, check=True)
-            print('### thumbnailing %s' % (pathname,)) ###log?
+            curs.execute('UPDATE pics SET thumbname = ? WHERE guid = ?', (pathname, guid,))
             
 def do_exportfiles(app):
     curs = app.getdb().cursor()
