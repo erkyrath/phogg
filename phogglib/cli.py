@@ -35,7 +35,7 @@ def cmd_createdb(args, app):
         print('"pics" table exists')
     else:
         print('creating "pics" table...')
-        curs.execute('CREATE TABLE pics(guid unique, pathname unique, type, width, height, timestamp)')
+        curs.execute('CREATE TABLE pics(guid unique, pathname unique, type, width, height, timestamp, thumbname)')
 
     if 'tags' in tables:
         print('"tags" table exists')

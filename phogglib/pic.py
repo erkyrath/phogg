@@ -7,13 +7,16 @@ import json
 tz_utc = pytz.timezone('UTC')
 
 class Pic:
-    def __init__(self, guid, pathname, type, width, height, timestamp):
+    def __init__(self, guid, pathname, type, width, height, timestamp, thumbname=None):
         self.guid = guid
         self.pathname = pathname
         self.type = type
         self.width = width
         self.height = height
         self.timestamp = timestamp
+        self.thumbname = None
+        if thumbname:
+            self.thumbname = thumbname
 
         self.tags = None
 
