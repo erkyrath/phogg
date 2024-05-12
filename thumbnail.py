@@ -5,12 +5,15 @@ import os, os.path
 import subprocess
 
 if len(sys.argv) < 4:
-    print('usage: thumbnail.py src dest imagetype')
+    print('usage: thumbnail.py src dest imagetype [ orient ]')
     sys.exit(-1)
 
 srcpath = sys.argv[1]
 destpath = sys.argv[2]
 imagetype = sys.argv[3]
+orient = 'N'
+if len(sys.argv) >= 5:
+    orient = sys.argv[4]
 
 if imagetype not in ('png', 'jpeg'):
     print('image type not recognized: ' + imagetype)
@@ -25,6 +28,7 @@ if destdir and not os.path.exists(destdir):
 nonce = str(os.getpid())
 tempfile1 = os.path.join(destdir, '__temp_%s_1.pnm' % (nonce,))
 tempfile2 = os.path.join(destdir, '__temp_%s_2.pnm' % (nonce,))
+tempfile3 = os.path.join(destdir, '__temp_%s_3.pnm' % (nonce,))
 
 if imagetype == 'jpeg':
     args = [ 'jpegtopnm', srcpath ]
@@ -37,13 +41,25 @@ if imagetype == 'jpeg':
     subprocess.run(args, check=True, stdout=outfl)
     outfl.close()
 
-    args = [ 'pnmtojpeg', tempfile2 ]
+    flipops = {
+        'N': '-null',
+        'F': '-r180',
+        'L': '-r270',
+        'R': '-r90',
+    }
+    args = [ 'pamflip', flipops[orient], tempfile2 ]
+    outfl = open(tempfile3, 'wb')
+    subprocess.run(args, check=True, stdout=outfl)
+    outfl.close()
+
+    args = [ 'pnmtojpeg', tempfile3 ]
     outfl = open(destpath, 'wb')
     subprocess.run(args, check=True, stdout=outfl)
     outfl.close()
 
     os.remove(tempfile1)
     os.remove(tempfile2)
+    os.remove(tempfile3)
     
 if imagetype == 'png':
     args = [ 'pngtopnm', srcpath ]
