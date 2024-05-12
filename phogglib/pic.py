@@ -3,6 +3,7 @@ import uuid
 import pytz
 import datetime
 import json
+import subprocess
 
 tz_utc = pytz.timezone('UTC')
 
@@ -121,6 +122,20 @@ def do_scandir(app):
             print('### removing %s' % (rpathname,)) ###log?
             curs.execute('DELETE FROM pics WHERE guid = ?', (guid,))
 
+def do_thumbnails(app):
+    curs = app.getdb().cursor()
+    
+    res = curs.execute('SELECT guid, type, pathname, thumbname FROM pics')
+    ls = [ tup for tup in res.fetchall() ]
+
+    for (guid, type, pathname, thumbname) in ls:
+        src = os.path.join(app.pic_path, pathname)
+        dest = os.path.join(app.thumb_path, pathname)
+        if not os.path.exists(dest):
+            args = [ '/Users/zarf/src/phogg/thumbnail.py', src, dest, type ]
+            subprocess.run(args, check=True)
+            print('### thumbnailing %s' % (pathname,)) ###log?
+            
 def do_exportfiles(app):
     curs = app.getdb().cursor()
 

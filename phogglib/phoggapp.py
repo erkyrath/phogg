@@ -9,7 +9,7 @@ from tinyapp.app import TinyApp, TinyRequest
 from tinyapp.handler import ReqHandler
 import tinyapp.auth
 
-from phogglib.pic import do_scandir, do_exportfiles
+from phogglib.pic import do_scandir, do_exportfiles, do_thumbnails
 
 class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
@@ -18,9 +18,11 @@ class PhoggApp(TinyApp):
         ###
         self.approot = '/phogg'
         self.pic_uri = '/testpics'
+        self.thumb_uri = '/testthumb'
         self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
         self.template_path = '/Users/zarf/src/phogg/templates'
         self.pic_path = '/Users/zarf/src/phogg/testpics'
+        self.thumb_path = '/Users/zarf/src/phogg/testthumb'
         self.export_path = '/Users/zarf/src/phogg/export'
         
         # Thread-local storage for various things which are not thread-safe.
@@ -77,4 +79,8 @@ class PhoggApp(TinyApp):
         
     def exportfiles(self):
         do_exportfiles(self)
+        
+
+    def makethumbnails(self):
+        do_thumbnails(self)
         
