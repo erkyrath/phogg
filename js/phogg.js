@@ -86,6 +86,30 @@ function build_pic_el(pic)
     return boxel;
 }
 
+function adjust_pic_tags(guids)
+{
+    for (var guid of guids) {
+        var pic = allpicmap.get(guid);
+        if (!pic)
+            continue;
+        var el = $('#cell-'+guid+' .Tags');
+        var tagtext = '';
+        if (pic.tags) {
+            var showtags = [];
+            for (var tag of pic.tags) {
+                if (!alltagmap.get(tag).autogen) {
+                    showtags.push(tag);
+                }
+            }
+            if (showtags.length) {
+                showtags.sort(tagname_sort_func);
+                tagtext = showtags.join(', ');
+            }
+        }
+        el.text(tagtext);
+    }
+}
+
 function resize_all_pics()
 {
     for (var pic of allpics) {
@@ -462,10 +486,16 @@ function evhan_api_settags(data, status, jqreq)
         }
     }
 
-    //### or: bang the pic tags lines, then rebuild_and_mark_tags()
-    //### except that if the filter is affected (!flag, a pic fell out of the filter), we really do need rebuild_pics().
-    rebuild_pics();
-    rebuild_and_mark_tags();
+    var showguids = get_visible();
+    if (showguids.length == displayed.size) {
+        adjust_pic_tags(guids);
+        rebuild_and_mark_tags();
+    }
+    else {
+        // This tag change affected the display list (interacting with a filter), so we need a full rebuild.
+        rebuild_pics();
+        rebuild_and_mark_tags();
+    }
 }
 
 function evhan_api_error(jqreq, status, error)
