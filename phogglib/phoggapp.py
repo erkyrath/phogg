@@ -18,12 +18,11 @@ class PhoggApp(TinyApp):
         self.approot = config['DEFAULT']['AppRoot']
         self.pic_uri = config['DEFAULT']['PicURI']
         self.thumb_uri = config['DEFAULT']['ThumbURI']
-        ###
-        self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
-        self.template_path = '/Users/zarf/src/phogg/templates'
-        self.pic_path = '/Users/zarf/src/phogg/testpics'
-        self.thumb_path = '/Users/zarf/src/phogg/testthumb'
-        self.export_path = '/Users/zarf/src/phogg/export'
+        self.db_path = config['DEFAULT']['DBPath']
+        self.template_path = config['DEFAULT']['TemplatePath']
+        self.pic_path = config['DEFAULT']['PicPath']
+        self.thumb_path = config['DEFAULT']['ThumbPath']
+        self.export_path = config['DEFAULT']['ExportPath']
 
         ###
         #self.pic_uri = '/realpics'
