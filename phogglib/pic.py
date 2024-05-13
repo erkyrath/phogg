@@ -24,11 +24,8 @@ class Pic:
         self.tags = None
 
         dat = datetime.datetime.fromtimestamp(timestamp)
-        dat = dat.astimezone(tz_utc)
+        self.timedat = dat.astimezone(tz_utc)
         self.texttime = dat.strftime('%b %d, %Y')
-        self.yeartag = dat.strftime('year:%Y')
-        self.monthtag = dat.strftime('month:%Y-%b').lower()
-        self.daytag = dat.strftime('day:%Y-%b-%d').lower()
 
         subdir, _, _ = pathname.rpartition('/')
         if subdir:
@@ -106,13 +103,17 @@ def do_scandir(app):
             logging.info('Adding %s to db', pic.pathname)
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, orient, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)', pictup)
             curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
+
+            yeartag = pic.timedat.strftime('year:%Y')
+            monthtag = pic.timedat.strftime('month:%Y-%b').lower()
+            daytag = pic.timedat.strftime('day:%Y-%b-%d').lower()
             
-            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.yeartag))
-            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.monthtag))
-            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.daytag))
-            newtags.add(pic.yeartag)
-            newtags.add(pic.monthtag)
-            newtags.add(pic.daytag)
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, yeartag))
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, monthtag))
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, daytag))
+            newtags.add(yeartag)
+            newtags.add(monthtag)
+            newtags.add(daytag)
             if pic.dirtag:
                 curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.dirtag))
                 newtags.add(pic.dirtag)
