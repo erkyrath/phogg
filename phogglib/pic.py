@@ -1,6 +1,7 @@
 import os, os.path
 import uuid
 import pytz
+import time
 import datetime
 import json
 import subprocess
@@ -22,10 +23,7 @@ class Pic:
             self.thumbname = thumbname
 
         self.tags = None
-
-        dat = datetime.datetime.fromtimestamp(timestamp)
-        self.timedat = dat.astimezone(tz_utc)
-        self.texttime = dat.strftime('%b %d, %Y')
+        self.texttime = time.strftime('%b %d, %Y', time.localtime(timestamp))
 
     def __repr__(self):
         return '<Pic "%s" %s>' % (self.pathname, self.guid,)
@@ -98,9 +96,12 @@ def do_scandir(app):
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, orient, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)', pictup)
             curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
 
-            yeartag = pic.timedat.strftime('year:%Y')
-            monthtag = pic.timedat.strftime('month:%Y-%b').lower()
-            daytag = pic.timedat.strftime('day:%Y-%b-%d').lower()
+            #rawdat = datetime.datetime.fromtimestamp(pic.timestamp)
+            #timedat = rawdat.astimezone(tz_utc)
+            timedat = time.localtime(pic.timestamp)
+            yeartag = time.strftime('year:%Y', timedat)
+            monthtag = time.strftime('month:%Y-%b', timedat).lower()
+            daytag = time.strftime('day:%Y-%b-%d', timedat).lower()
             
             curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, yeartag))
             curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, monthtag))
