@@ -15,10 +15,10 @@ class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
         TinyApp.__init__(self, hanclasses, wrapall=[])
 
+        self.approot = config['DEFAULT']['AppRoot']
+        self.pic_uri = config['DEFAULT']['PicURI']
+        self.thumb_uri = config['DEFAULT']['ThumbURI']
         ###
-        self.approot = '/phogg'
-        self.pic_uri = '/testpics'
-        self.thumb_uri = '/testthumb'
         self.db_path = '/Users/zarf/src/phogg/sql/phogg.db'
         self.template_path = '/Users/zarf/src/phogg/templates'
         self.pic_path = '/Users/zarf/src/phogg/testpics'
