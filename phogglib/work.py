@@ -7,6 +7,7 @@ import subprocess
 import logging
 
 from phogglib.pic import Pic, parse_jpeg, parse_png
+from phogglib.tag import Tag
 
 def do_scandir(app):
     newtags = set()
@@ -157,6 +158,9 @@ def do_importfiles(app, filename):
 
     curs = app.getdb().cursor()
     
+    res = curs.execute('SELECT tag FROM tags')
+    tagset = set([ tup[0] for tup in res.fetchall() ])
+        
     for (pathname, tagls) in tagmap.items():
         res = curs.execute('SELECT * FROM pics WHERE pathname = ?', (pathname,))
         tup = res.fetchone()
@@ -170,5 +174,8 @@ def do_importfiles(app, filename):
                 continue
             if pic.tags and tag in pic.tags:
                 continue
-            print('### adding', tag, pic)
+            curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (pic.guid, tag))
+            if tag not in tagset:
+                curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, False))
+                tagset.add(tag)
             
