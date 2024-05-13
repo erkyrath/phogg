@@ -135,7 +135,6 @@ def do_exportfiles(app):
     fl.close()
         
 def do_importfiles(app, filename):
-    print('### import', filename)
     tagmap = dict()
     if filename.endswith('.json'):
         fl = open(filename)
@@ -149,11 +148,27 @@ def do_importfiles(app, filename):
             if ln.startswith('#'):
                 continue
             pic, _, tags = ln.partition(':')
+            pic = pic.strip()
             if not pic:
                 continue
             pic = pic.strip()
             tagls = [ val.strip() for val in tags.split(',') ]
             tagmap[pic] = tagls
 
-    print('###', tagmap)
+    curs = app.getdb().cursor()
     
+    for (pathname, tagls) in tagmap.items():
+        res = curs.execute('SELECT * FROM pics WHERE pathname = ?', (pathname,))
+        tup = res.fetchone()
+        if not tup:
+            print('no such image: %s' % (pathname,))
+            continue
+        pic = Pic(*tup)
+        pic.fetchtags(app)
+        for tag in tagls:
+            if ':' in tag:
+                continue
+            if pic.tags and tag in pic.tags:
+                continue
+            print('### adding', tag, pic)
+            
