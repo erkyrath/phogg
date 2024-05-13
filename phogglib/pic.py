@@ -28,10 +28,14 @@ class Pic:
     def __repr__(self):
         return '<Pic "%s" %s>' % (self.pathname, self.guid,)
 
-    def fetchtags(self, app):
-        curs = app.getdb().cursor()
-        res = curs.execute('SELECT tag FROM assoc WHERE guid = ?', (self.guid,))
-        ls = [ tup[0] for tup in res.fetchall() ]
+    def fetchtags(self, app, assoc=None):
+        if assoc is None:
+            curs = app.getdb().cursor()
+            res = curs.execute('SELECT tag FROM assoc WHERE guid = ?', (self.guid,))
+            ls = [ tup[0] for tup in res.fetchall() ]
+        else:
+            ls = assoc.get(self.guid, [])
+            ls = list(ls)
         ls.sort()
         self.tags = ls
         
