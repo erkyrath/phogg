@@ -27,8 +27,16 @@ class han_GetPics(ReqHandler):
         res = curs.execute('SELECT * FROM pics')
         picls = [ Pic(*tup) for tup in res.fetchall() ]
 
+        assoc = dict()
+        res = curs.execute('SELECT guid, tag FROM assoc')
+        for (guid, tag) in res.fetchall():
+            if guid not in assoc:
+                assoc[guid] = [ tag ]
+            else:
+                assoc[guid].append(tag)
+
         for pic in picls:
-            pic.fetchtags(self.app)
+            pic.fetchtags(self.app, assoc=assoc)
         
         req.set_content_type('text/json')
         dat = {
