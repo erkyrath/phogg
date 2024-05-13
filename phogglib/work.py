@@ -134,3 +134,6 @@ def do_exportfiles(app):
     json.dump(dat, fl, indent=2)
     fl.close()
         
+def do_importfiles(app, filename):
+    print('### import', filename)
+    

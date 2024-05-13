@@ -1,7 +1,7 @@
 import argparse
 import os, os.path
 
-from phogglib.work import do_scandir, do_exportfiles, do_thumbnails
+from phogglib.work import do_scandir, do_exportfiles, do_importfiles, do_thumbnails
 
 def run(appinstance):
     popt = argparse.ArgumentParser(prog='phogg.wsgi')
@@ -18,6 +18,10 @@ def run(appinstance):
     
     pcmd = subopt.add_parser('export', help='export db files')
     pcmd.set_defaults(cmdfunc=cmd_export)
+    
+    pcmd = subopt.add_parser('import', help='import tag data to db files')
+    pcmd.add_argument('filename')
+    pcmd.set_defaults(cmdfunc=cmd_import)
     
     pcmd = subopt.add_parser('cleantags', help='remove unused tags')
     pcmd.set_defaults(cmdfunc=cmd_cleantags)
@@ -63,8 +67,12 @@ def cmd_scan(args, app):
     app.scandir(force=True)
     
 def cmd_export(args, app):
+    print('exporting tag data to %s' % (app.export_path,))
     do_exportfiles(app)
-    print('exported tag data to %s' % (app.export_path,))
+    
+def cmd_import(args, app):
+    print('importing tag data from %s' % (args.filename,))
+    do_importfiles(app, args.filename)
     
 def cmd_thumbnail(args, app):
     do_thumbnails(app)
