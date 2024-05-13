@@ -27,12 +27,6 @@ class Pic:
         self.timedat = dat.astimezone(tz_utc)
         self.texttime = dat.strftime('%b %d, %Y')
 
-        subdir, _, _ = pathname.rpartition('/')
-        if subdir:
-            self.dirtag = 'dir:'+subdir.lower()
-        else:
-            self.dirtag = None
-
     def __repr__(self):
         return '<Pic "%s" %s>' % (self.pathname, self.guid,)
 
@@ -114,9 +108,12 @@ def do_scandir(app):
             newtags.add(yeartag)
             newtags.add(monthtag)
             newtags.add(daytag)
-            if pic.dirtag:
-                curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, pic.dirtag))
-                newtags.add(pic.dirtag)
+            
+            subdir, _, _ = pic.pathname.rpartition('/')
+            if subdir:
+                dirtag = 'dir:'+subdir.lower()
+                curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, dirtag))
+                newtags.add(dirtag)
 
     for tag in newtags:
         curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, True))
