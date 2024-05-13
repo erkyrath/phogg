@@ -6,6 +6,8 @@ import json
 import subprocess
 import logging
 
+from phogglib.pic import Pic, parse_jpeg, parse_png
+
 def do_scandir(app):
     newtags = set()
     
