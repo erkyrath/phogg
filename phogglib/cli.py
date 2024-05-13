@@ -101,6 +101,8 @@ def cmd_renametag(args, app):
     if res.fetchone():
         print('tag already exists: %s' % (args.newtag,))
         return
-    
 
+    print('renaming tag %s to %s' % (args.oldtag, args.newtag,))
+    curs.execute('UPDATE tags SET tag = ? WHERE tag = ?', (args.newtag, args.oldtag,))
+    curs.execute('UPDATE assoc SET tag = ? WHERE tag = ?', (args.newtag, args.oldtag,))
 
