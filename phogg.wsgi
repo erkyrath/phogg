@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
+import os
 import json
 import logging, logging.handlers
+import configparser
+import threading
 
 from tinyapp.handler import ReqHandler
 from tinyapp.constants import PLAINTEXT, HTML
@@ -85,27 +88,80 @@ class han_SetTags(ReqHandler):
         }
         yield(json.dumps(dat))
 
-config = {} ###
 
-logfilepath = '/Users/zarf/src/phogg/out.log'
-loghandler = logging.handlers.WatchedFileHandler(logfilepath)
-logging.basicConfig(
-    format = '[%(levelname).1s %(asctime)s] %(message)s',
-    datefmt = '%b-%d %H:%M:%S',
-    level = logging.INFO,
-    handlers = [ loghandler ],
-)
-
-appinstance = PhoggApp(config, [
+# Create the master handler list.
+handlers = [
     ('', han_Home),
     ('/api/getpics', han_GetPics),
     ('/api/settags', han_SetTags),
-])
+]
 
-application = appinstance.application
+appinstance = None
+config = None
+initlock = threading.Lock()
+
+def create_appinstance(environ):
+    """Read the configuration and create the TinyApp instance.
+    
+    We have to do this when the first application request comes in,
+    because the config file location is stored in the WSGI environment,
+    which is passed in to application(). (It's *not* in os.environ,
+    unless we're calling this from the command line.)
+    """
+    global config, appinstance
+
+    with initlock:
+        # To be extra careful, we do this under a thread lock. (I don't know
+        # if application() can be called by two threads at the same time, but
+        # let's assume it's possible.)
+        
+        if appinstance is not None:
+            # Another thread did all the work while we were grabbing the lock!
+            return
+    
+        # The config file contains all the paths and settings used by the app.
+        # The location is specified by the PHOGG_CONFIG env var (if
+        # on the command line) or the "SetEnv PHOGG_CONFIG" line (in the
+        # Apache WSGI environment).
+        configpath = '/opt/homebrew/var/wsgi-bin/phogg.config'
+        configpath = environ.get('PHOGG_CONFIG', configpath)
+        if not os.path.isfile(configpath):
+            raise Exception('Config file not found: ' + configpath)
+        
+        config = configparser.ConfigParser()
+        config.read(configpath)
+        
+        # Set up the logging configuration.
+        # (WatchedFileHandler allows logrotate to rotate the file out from
+        # under it.)
+        logfilepath = config['DEFAULT']['LogFile']
+        loghandler = logging.handlers.WatchedFileHandler(logfilepath)
+        logging.basicConfig(
+            format = '[%(levelname).1s %(asctime)s] %(message)s',
+            datefmt = '%b-%d %H:%M:%S',
+            level = logging.INFO,
+            handlers = [ loghandler ],
+        )
+        
+        # Create the application instance itself.
+        appinstance = PhoggApp(config, handlers)
+
+    # Thread lock is released when we exit the "with" block.
+
+
+def application(environ, start_response):
+    """The exported WSGI entry point.
+    Normally this would just be appinstance.application, but we need to
+    wrap that in order to call create_appinstance().
+    """
+    if appinstance is None:
+        create_appinstance(environ)
+    return appinstance.application(environ, start_response)
+
 
 if __name__ == '__main__':
     import phogglib.cli
+    create_appinstance(os.environ)
     phogglib.cli.run(appinstance)
 
 
