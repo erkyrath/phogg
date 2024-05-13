@@ -160,7 +160,10 @@ def do_importfiles(app, filename):
     
     res = curs.execute('SELECT tag FROM tags')
     tagset = set([ tup[0] for tup in res.fetchall() ])
-        
+
+    piccount = 0
+    tagcount = 0
+    
     for (pathname, tagls) in tagmap.items():
         res = curs.execute('SELECT * FROM pics WHERE pathname = ?', (pathname,))
         tup = res.fetchone()
@@ -169,13 +172,22 @@ def do_importfiles(app, filename):
             continue
         pic = Pic(*tup)
         pic.fetchtags(app)
+        
+        didcount = 0
         for tag in tagls:
             if ':' in tag:
                 continue
             if pic.tags and tag in pic.tags:
                 continue
+            didcount += 1
             curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (pic.guid, tag))
             if tag not in tagset:
                 curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, False))
                 tagset.add(tag)
+
+        if didcount:
+            tagcount += didcount
+            piccount += 1
             
+    logging.info('Imported %d tags for %d pics' % (tagcount, piccount,))
+        
