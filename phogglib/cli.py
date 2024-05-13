@@ -7,25 +7,25 @@ def run(appinstance):
     popt = argparse.ArgumentParser(prog='phogg.wsgi')
     subopt = popt.add_subparsers(dest='cmd', title='commands')
 
-    popt_createdb = subopt.add_parser('createdb', help='create database tables')
-    popt_createdb.set_defaults(cmdfunc=cmd_createdb)
+    pcmd = subopt.add_parser('createdb', help='create database tables')
+    pcmd.set_defaults(cmdfunc=cmd_createdb)
     
-    popt_scan = subopt.add_parser('scan', help='scan photo dir')
-    popt_scan.set_defaults(cmdfunc=cmd_scan)
+    pcmd = subopt.add_parser('scan', help='scan photo dir')
+    pcmd.set_defaults(cmdfunc=cmd_scan)
     
-    popt_thumbnail = subopt.add_parser('thumbnail', help='thumbnail db files')
-    popt_thumbnail.set_defaults(cmdfunc=cmd_thumbnail)
+    pcmd = subopt.add_parser('thumbnail', help='thumbnail db files')
+    pcmd.set_defaults(cmdfunc=cmd_thumbnail)
     
-    popt_export = subopt.add_parser('export', help='export db files')
-    popt_export.set_defaults(cmdfunc=cmd_export)
+    pcmd = subopt.add_parser('export', help='export db files')
+    pcmd.set_defaults(cmdfunc=cmd_export)
     
-    popt_cleantags = subopt.add_parser('cleantags', help='remove unused tags')
-    popt_cleantags.set_defaults(cmdfunc=cmd_cleantags)
+    pcmd = subopt.add_parser('cleantags', help='remove unused tags')
+    pcmd.set_defaults(cmdfunc=cmd_cleantags)
     
-    popt_renametag = subopt.add_parser('renametag', help='rename a tag')
-    popt_renametag.add_argument('oldtag')
-    popt_renametag.add_argument('newtag')
-    popt_renametag.set_defaults(cmdfunc=cmd_renametag)
+    pcmd = subopt.add_parser('renametag', help='rename a tag')
+    pcmd.add_argument('oldtag')
+    pcmd.add_argument('newtag')
+    pcmd.set_defaults(cmdfunc=cmd_renametag)
     
     args = popt.parse_args()
 
@@ -64,6 +64,7 @@ def cmd_scan(args, app):
     
 def cmd_export(args, app):
     do_exportfiles(app)
+    print('exported tag data to %s' % (app.export_path,))
     
 def cmd_thumbnail(args, app):
     do_thumbnails(app)
