@@ -4,6 +4,7 @@ import pytz
 import datetime
 import json
 import subprocess
+import logging
 
 tz_utc = pytz.timezone('UTC')
 
@@ -97,12 +98,12 @@ def do_scandir(app):
                 else:
                     continue
             except Exception as ex:
-                ### log somewhere?
+                logging.error('Failed to parse image (%s): %s', pathname, ex)
                 continue
 
             pictup = (guid, rpathname, filetype, width, height, orient, int(sta.st_mtime))
             pic = Pic(*pictup)
-            print('### adding %s' % (pic,)) ###log?
+            logging.info('Adding %s to db', pic.pathname)
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, orient, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)', pictup)
             curs.execute('DELETE FROM assoc WHERE guid = ?', (guid,))
             
@@ -123,7 +124,7 @@ def do_scandir(app):
     ls = [ tup for tup in res.fetchall() ]
     for (guid, rpathname) in ls:
         if rpathname not in foundfiles:
-            print('### removing %s' % (rpathname,)) ###log?
+            logging.info('Removing %s from db', rpathname)
             curs.execute('DELETE FROM pics WHERE guid = ?', (guid,))
 
 def do_thumbnails(app):
@@ -136,7 +137,7 @@ def do_thumbnails(app):
         src = os.path.join(app.pic_path, pathname)
         dest = os.path.join(app.thumb_path, pathname)
         if not os.path.exists(dest):
-            print('### thumbnailing %s' % (pathname,)) ###log?
+            logging.info('Creating thumbnail for %s', pathname)
             args = [ '/Users/zarf/src/phogg/thumbnail.py', src, dest, type, orient ]
             subprocess.run(args, check=True)
             curs.execute('UPDATE pics SET thumbname = ? WHERE guid = ?', (pathname, guid,))
