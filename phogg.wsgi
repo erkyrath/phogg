@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import json
+import logging, logging.handlers
 
 from tinyapp.handler import ReqHandler
 from tinyapp.constants import PLAINTEXT, HTML
@@ -77,7 +78,15 @@ class han_SetTags(ReqHandler):
         yield(json.dumps(dat))
 
 config = {} ###
-### logging?
+
+logfilepath = '/Users/zarf/src/phogg/out.log'
+loghandler = logging.handlers.WatchedFileHandler(logfilepath)
+logging.basicConfig(
+    format = '[%(levelname).1s %(asctime)s] %(message)s',
+    datefmt = '%b-%d %H:%M:%S',
+    level = logging.INFO,
+    handlers = [ loghandler ],
+)
 
 appinstance = PhoggApp(config, [
     ('', han_Home),
