@@ -136,4 +136,24 @@ def do_exportfiles(app):
         
 def do_importfiles(app, filename):
     print('### import', filename)
+    tagmap = dict()
+    if filename.endswith('.json'):
+        fl = open(filename)
+        dat = json.load(fl)
+        fl.close()
+        for obj in dat['pics']:
+            tagmap[obj['pathname']] = obj['tags']
+    else:
+        fl = open(filename)
+        for ln in fl.readlines():
+            if ln.startswith('#'):
+                continue
+            pic, _, tags = ln.partition(':')
+            if not pic:
+                continue
+            pic = pic.strip()
+            tagls = [ val.strip() for val in tags.split(',') ]
+            tagmap[pic] = tagls
+
+    print('###', tagmap)
     
