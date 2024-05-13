@@ -1,6 +1,8 @@
 import argparse
 import os, os.path
 
+from phogglib.work import do_scandir, do_exportfiles, do_thumbnails
+
 def run(appinstance):
     popt = argparse.ArgumentParser(prog='phogg.wsgi')
     subopt = popt.add_subparsers(dest='cmd', title='commands')
@@ -61,10 +63,10 @@ def cmd_scan(args, app):
     app.scandir(force=True)
     
 def cmd_export(args, app):
-    app.exportfiles()
+    do_exportfiles(app)
     
 def cmd_thumbnail(args, app):
-    app.makethumbnails()
+    do_thumbnails(app)
     
 def cmd_cleantags(args, app):
     curs = app.getdb().cursor()

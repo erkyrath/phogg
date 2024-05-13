@@ -9,7 +9,7 @@ from tinyapp.app import TinyApp, TinyRequest
 from tinyapp.handler import ReqHandler
 import tinyapp.auth
 
-from phogglib.pic import do_scandir, do_exportfiles, do_thumbnails
+from phogglib.work import do_scandir
 
 class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
@@ -82,11 +82,3 @@ class PhoggApp(TinyApp):
     def scandir(self, force=False):
         ### timestamp check unless force (subdirs harder?)
         do_scandir(self)
-        
-    def exportfiles(self):
-        do_exportfiles(self)
-        
-
-    def makethumbnails(self):
-        do_thumbnails(self)
-        
