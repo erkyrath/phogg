@@ -13,7 +13,7 @@ Phogg is a Python web app. You have to install it on a web server that supports 
 [WSGI]: https://docs.python.org/3/library/wsgiref.html
 [mod_wsgi]: https://pypi.org/project/mod-wsgi/
 
-Then you have to install Phogg, which I'm afraid is not a documented procedure. I hacked it together on my Mac. So you know it's possible, which is the important part, right?
+I'm afraid the install is not a documented procedure. I hacked it together on my Mac. So you know it's possible, which is the important part, right?
 
 A couple of hints:
 
