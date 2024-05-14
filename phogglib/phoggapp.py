@@ -23,12 +23,6 @@ class PhoggApp(TinyApp):
         self.pic_path = config['DEFAULT']['PicPath']
         self.thumb_path = config['DEFAULT']['ThumbPath']
         self.export_path = config['DEFAULT']['ExportPath']
-
-        ###
-        #self.pic_uri = '/realpics'
-        #self.thumb_uri = '/realthumbs'
-        #self.pic_path = '/Users/zarf/Pictures/ZarfPhone Depot'
-        #self.thumb_path = '/Users/zarf/src/phogg/realthumbs'
         
         # Thread-local storage for various things which are not thread-safe.
         self.threadcache = threading.local()
