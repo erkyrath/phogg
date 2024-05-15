@@ -289,7 +289,6 @@ function rebuild_alltags()
 
 function adjust_status_line()
 {
-    console.log('### adjust status line');
     var msg = '' + allpics.length + ' images';
 
     if (displayed.size != allpics.length) {
