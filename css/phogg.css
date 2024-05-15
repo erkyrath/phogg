@@ -61,12 +61,28 @@ body {
     border-bottom: 1px solid #CCC;
 }
 
+#photostatus {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    height: 29px;
+    background-color: white;;
+    border-top: 1px solid #CCC;
+}
+
+#photostatus .Status {
+    padding-top: 6px;
+    padding-left: 10px;
+    font-size: 85%;
+}
+
 #photopane {
     position: absolute;
     left: 0px;
     right: 0px;
     top: 40px;
-    bottom: 0px;
+    bottom: 30px;
     overflow-y: scroll;
     background-color: white;
 }
@@ -242,8 +258,8 @@ body {
 
 #errorpane {
     position: absolute;
-    right: 0px;
-    bottom: 0px;
+    right: 10px;
+    bottom: 30px;
     width: 30%;
     pointer-events: none;
 }
