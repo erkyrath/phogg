@@ -290,6 +290,18 @@ function rebuild_alltags()
 function adjust_status_line()
 {
     console.log('### adjust status line');
+    var msg = '' + allpics.length + ' images';
+
+    if (displayed.size != allpics.length) {
+        msg += '; ' + displayed.size + ' shown';
+    }
+
+    var sel = get_selected();
+    if (sel.length) {
+        msg += '; ' + sel.length + ' selected';
+    }
+
+    $('#photostatus .Status').text(msg);
 }
 
 function accept_new_tag(newtag)
