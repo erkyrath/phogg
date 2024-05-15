@@ -287,6 +287,10 @@ function rebuild_alltags()
     }
 }
 
+function adjust_status_line()
+{
+    console.log('### adjust status line');
+}
 
 function accept_new_tag(newtag)
 {
@@ -347,6 +351,7 @@ function add_filter_tag(tag)
         rebuild_filtertags();
         rebuild_pics();
         rebuild_and_mark_tags();
+        adjust_status_line();
     }
 }
 
@@ -358,6 +363,7 @@ function remove_filter_tag(tag)
         rebuild_filtertags();
         rebuild_pics();
         rebuild_and_mark_tags();
+        adjust_status_line();
     }
 }
 
@@ -459,6 +465,7 @@ function evhan_api_getpics(data, status, jqreq)
     rebuild_alltags();
     rebuild_pics();
     rebuild_and_mark_tags();
+    adjust_status_line();
 }
 
 function evhan_api_settags(data, status, jqreq)
@@ -501,6 +508,7 @@ function evhan_api_settags(data, status, jqreq)
         // This tag change affected the display list (interacting with a filter), so we need a full rebuild.
         rebuild_pics();
         rebuild_and_mark_tags();
+        adjust_status_line();
     }
 }
 
@@ -538,6 +546,7 @@ function evhan_filtertext_change()
         filtertext = filter;
         rebuild_pics();
         rebuild_and_mark_tags();
+        adjust_status_line();
     }
 }
 
@@ -613,6 +622,7 @@ function evhan_click_image(ev)
             selected.delete(guid);
         }
         adjust_selected_pics(false, [ guid ]);
+        adjust_status_line();
     }
     else if (ev.shiftKey) {
         if (lastselectanchor == -1) {
@@ -621,6 +631,7 @@ function evhan_click_image(ev)
             if (!selected.has(guid)) {
                 selected.add(guid);
                 adjust_selected_pics(false, [ guid ]);
+                adjust_status_line();
             }
         }
         else {
@@ -644,6 +655,7 @@ function evhan_click_image(ev)
                 selected.add(guid);
             }
             adjust_selected_pics(true, newls);
+            adjust_status_line();
         }
     }
     else {
@@ -652,6 +664,7 @@ function evhan_click_image(ev)
             selected.clear();
             selected.add(guid);
             adjust_selected_pics(true, [ guid ]);
+            adjust_status_line();
         }
     }
 }
@@ -700,6 +713,7 @@ function evhan_click_background(ev)
     if (selected.size) {
         selected.clear();
         adjust_selected_pics(true, []);
+        adjust_status_line();
     }
 }
 
