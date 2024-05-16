@@ -256,6 +256,10 @@ body {
     color: #A00;
 }
 
+.InitialText {
+    text-align: center;
+}
+
 #errorpane {
     position: absolute;
     right: 10px;

@@ -31,7 +31,8 @@ function rebuild_pics()
         pic.index = index;
         index++;
     }
-    
+
+    $('.InitialText').remove();
     var parel = $('.PhotoGrid');
     parel.empty();
     
@@ -795,6 +796,8 @@ $(document).ready(function() {
     $('.PhotoGrid').on('click', evhan_click_background);
 
     //### undo? https://github.com/samthor/undoer
+
+    $('.InitialText').text('Loading...');
     
     jQuery.ajax('/phogg/api/getpics', {
         dataType: 'json',
