@@ -41,7 +41,7 @@ def do_scandir(app):
                     orient = 'N'
                 elif suffix in ('.jpg', '.jpeg'):
                     filetype = 'jpeg'
-                    (width, height, orient) = parse_jpeg(pathname)
+                    (width, height, orient, timestr) = parse_jpeg(pathname)
                 else:
                     continue
             except Exception as ex:

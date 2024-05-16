@@ -70,6 +70,7 @@ def parse_png(pathname):
 def parse_jpeg(pathname):
     fl = open(pathname, 'rb')
     orientation = 1
+    timestamp = None
     orimap = 'NNNFFRLLRN'
     while True:
         if fl.read(1)[0] != 0xFF:
@@ -96,6 +97,14 @@ def parse_jpeg(pathname):
                     tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
                     #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
                     orientation = dat[pos+9]
+                if indextag == 0x132:
+                    tagtype = (dat[pos+2] << 8) | dat[pos+3]
+                    tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
+                    tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    val = dat[ tagoffset+6 : tagoffset+6+tagcount ]
+                    if val[-1] == 0:
+                        val = val[ : -1 ]
+                    timestamp = val.decode()
             continue
         if (marker >= 0xC0 and marker <= 0xCF and marker != 0xC8):
             if clen <= 7:
@@ -107,6 +116,6 @@ def parse_jpeg(pathname):
             fl.close()
             if orientation in (6, 8):
                 (width, height) = (height, width)
-            return (width, height, orimap[orientation])
+            return (width, height, orimap[orientation], timestamp)
         fl.seek(clen-2, os.SEEK_CUR)
     raise Exception('SOF block not found')
