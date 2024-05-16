@@ -48,7 +48,12 @@ def do_scandir(app):
                 logging.error('Failed to parse image (%s): %s', pathname, ex)
                 continue
 
-            pictup = (guid, rpathname, filetype, width, height, orient, int(sta.st_mtime))
+            timestamp = int(sta.st_mtime)
+            if timestr:
+                tup = time.strptime(timestr, '%Y:%m:%d %H:%M:%S')
+                timestamp = int(time.mktime(tup))
+
+            pictup = (guid, rpathname, filetype, width, height, orient, timestamp)
             pic = Pic(*pictup)
             logging.info('Adding %s to db', pic.pathname)
             curs.execute('INSERT INTO pics (guid, pathname, type, width, height, orient, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)', pictup)
