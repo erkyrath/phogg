@@ -120,7 +120,7 @@ def do_exportfiles(app):
     
     res = curs.execute('SELECT * FROM pics')
     picls = [ Pic(*tup) for tup in res.fetchall() ]
-    picls.sort(key=lambda pic: pic.timestamp)
+    picls.sort(key=lambda pic: (pic.timestamp, pic.pathname,))
 
     for pic in picls:
         pic.fetchtags(app)
