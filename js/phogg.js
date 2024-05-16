@@ -472,7 +472,7 @@ function evhan_api_getpics(data, status, jqreq)
     }
 
     alltags.sort(tagobj_sort_func);
-    allpics.sort(function(p1, p2) { return p2.timestamp - p1.timestamp; });
+    allpics.sort(pic_sort_func);
 
     rebuild_alltags();
     rebuild_pics();
@@ -754,6 +754,14 @@ function tagobj_sort_func(tag1, tag2)
     if (auto2 && !auto1)
         return -1;
     return tag1.tag.localeCompare(tag2.tag);
+}
+
+function pic_sort_func(p1, p2)
+{
+    if (p2.timestamp == p1.timestamp)
+        return p1.pathname.localeCompare(p2.pathname);
+    
+    return p2.timestamp - p1.timestamp;
 }
 
 function tab_completion(val)
