@@ -241,12 +241,12 @@ def do_generatepages(app):
     taggroupmap = { None: [] }
     for (tag, autogen) in alltags.items():
         if not autogen:
-            taggroupmap[None].append(tag)
+            taggroupmap[None].append( (tag, len(tagmap[tag])) )
         else:
             prefix, _, subtag = tag.partition(':')
             if prefix not in taggroupmap:
                 taggroupmap[prefix] = []
-            taggroupmap[prefix].append(tag)
+            taggroupmap[prefix].append( (subtag, len(tagmap[tag])) )
 
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
@@ -255,7 +255,7 @@ def do_generatepages(app):
 
     alltaggroups = []
     for prefix in prefixes:
-        ls = [ (tag, len(tagmap[tag])) for tag in taggroupmap[prefix] ]
+        ls = taggroupmap[prefix]
         alltaggroups.append( (prefix, ls) )
     
     tem = app.getjenv().get_template('cat.html')
