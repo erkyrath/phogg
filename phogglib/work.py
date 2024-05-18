@@ -196,3 +196,25 @@ def do_importfiles(app, filename):
             
     logging.info('Imported %d tags for %d pics' % (tagcount, piccount,))
         
+
+def do_generatepages(app):
+    curs = app.getdb().cursor()
+
+    tagauto = dict()
+    res = curs.execute('SELECT tag FROM tags where autogen = ?', (True,))
+    for tup in res.fetchall():
+        tagauto[tup[0]] = 1
+    
+    res = curs.execute('SELECT * FROM pics')
+    picls = [ Pic(*tup) for tup in res.fetchall() ]
+    picls.sort(key=lambda pic: (pic.timestamp, pic.pathname,))
+
+    for pic in picls:
+        pic.fetchtags(app)
+
+    tem = app.getjenv().get_template('cat.html')
+    filename = os.path.join(app.webgen_path, 'index.html')
+    fl = open(filename, 'w')
+    fl.write(tem.render(pics=picls))
+    fl.close()
+    

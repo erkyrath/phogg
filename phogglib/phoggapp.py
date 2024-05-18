@@ -23,6 +23,7 @@ class PhoggApp(TinyApp):
         self.pic_path = config['DEFAULT']['PicPath']
         self.thumb_path = config['DEFAULT']['ThumbPath']
         self.export_path = config['DEFAULT']['ExportPath']
+        self.webgen_path = config['DEFAULT']['WebGenPath']
         
         # Thread-local storage for various things which are not thread-safe.
         self.threadcache = threading.local()

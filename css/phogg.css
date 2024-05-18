@@ -87,6 +87,16 @@ body {
     background-color: white;
 }
 
+#photopane-no {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    overflow-y: scroll;
+    background-color: white;
+}
+
 .PhotoGrid {
     position: relative;
     width: 100%;

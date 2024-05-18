@@ -1,0 +1,30 @@
+{% extends "page.html" %}
+
+{% block content %}
+
+<div id="toolcol">
+  XXX
+</div>
+
+<div id="maincol">
+  <div id="photopane-no">
+    <div class="PhotoGrid SizeMedium">
+      {% for pic in pics %}
+          <div class="PhotoCellBox">
+              <div class="PhotoCellGap"></div>
+              <div class="PhotoCell">
+                <div class="Filename">{{ pic.pathname }}</div>
+                <div class="OutButton"><a target=_blank href="/testpics/{{ pic.pathname }}">&#x21D7;</a></div>
+                <img class="Photo" loading="lazy" width="180" height="135" src="/testpics/{{ pic.pathname }}">
+                <div class="Date">{{ pic.texttime }}</div>
+		{% set comma = joiner(', ') %}
+                <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
+              </div>
+              <div class="PhotoCellGap"></div>
+          </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

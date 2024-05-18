@@ -1,7 +1,7 @@
 import argparse
 import os, os.path
 
-from phogglib.work import do_scandir, do_exportfiles, do_importfiles, do_thumbnails
+from phogglib.work import do_scandir, do_exportfiles, do_importfiles, do_thumbnails, do_generatepages
 
 def run(appinstance):
     popt = argparse.ArgumentParser(prog='phogg.wsgi')
@@ -15,6 +15,9 @@ def run(appinstance):
     
     pcmd = subopt.add_parser('thumbnail', help='thumbnail db files')
     pcmd.set_defaults(cmdfunc=cmd_thumbnail)
+    
+    pcmd = subopt.add_parser('webgen', help='export static site')
+    pcmd.set_defaults(cmdfunc=cmd_webgen)
     
     pcmd = subopt.add_parser('export', help='export db files')
     pcmd.set_defaults(cmdfunc=cmd_export)
@@ -65,6 +68,10 @@ def cmd_createdb(args, app):
 
 def cmd_scan(args, app):
     app.scandir(force=True)
+    
+def cmd_webgen(args, app):
+    print('exporting static pages to %s' % (app.webgen_path,))
+    do_generatepages(app)
     
 def cmd_export(args, app):
     print('exporting tag data to %s' % (app.export_path,))
