@@ -200,10 +200,11 @@ def do_importfiles(app, filename):
 def do_generatepages(app):
     curs = app.getdb().cursor()
 
-    tagauto = dict()
-    res = curs.execute('SELECT tag FROM tags where autogen = ?', (True,))
+    alltags = dict()
+    res = curs.execute('SELECT tag, autogen FROM tags')
     for tup in res.fetchall():
-        tagauto[tup[0]] = 1
+        val = 1 if tup[1] else 0
+        alltags[tup[0]] = val
     
     res = curs.execute('SELECT * FROM pics')
     picls = [ Pic(*tup) for tup in res.fetchall() ]
@@ -212,7 +213,7 @@ def do_generatepages(app):
     imagesize = 180
     for pic in picls:
         pic.fetchtags(app)
-        pic.tags.sort(key=lambda tag: (tagauto.get(tag, 0), tag))
+        pic.tags.sort(key=lambda tag: (alltags.get(tag, 0), tag))
         aspect = pic.width / pic.height
         if aspect > 1:
             pic.thumbwidth = imagesize
@@ -226,4 +227,18 @@ def do_generatepages(app):
     fl = open(filename, 'w')
     fl.write(tem.render(pics=picls))
     fl.close()
+
+    tagmap = {}
+    for pic in picls:
+        for tag in pic.tags:
+            if tag not in tagmap:
+                tagmap[tag] = []
+            tagmap[tag].append(pic)
     
+    for (tag, ls) in tagmap.items():
+        # TODO: better tag slugging
+        filename = os.path.join(app.webgen_path, 'tag_%s.html' % (tag,))
+        fl = open(filename, 'w')
+        fl.write(tem.render(pics=ls))
+        fl.close()
+        
