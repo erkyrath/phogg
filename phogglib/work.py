@@ -212,6 +212,7 @@ def do_generatepages(app):
     imagesize = 180
     for pic in picls:
         pic.fetchtags(app)
+        pic.tags.sort(key=lambda tag: (tagauto.get(tag, 0), tag))
         aspect = pic.width / pic.height
         if aspect > 1:
             pic.thumbwidth = imagesize
