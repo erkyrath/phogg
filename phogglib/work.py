@@ -207,7 +207,7 @@ def do_generatepages(app):
     
     res = curs.execute('SELECT * FROM pics')
     picls = [ Pic(*tup) for tup in res.fetchall() ]
-    picls.sort(key=lambda pic: (pic.timestamp, pic.pathname,))
+    picls.sort(key=lambda pic: (-pic.timestamp, pic.pathname,))
 
     imagesize = 180
     for pic in picls:
