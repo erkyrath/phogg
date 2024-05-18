@@ -11,8 +11,8 @@
     {% for prefix, tagls in alltags %}
       <div class="TagGroup">
         {% if prefix %}<div class="Label">{{ prefix|upper }}</div>{% endif %}
-        {% for tag, tagcount in tagls %}
-          <div {% if prefix %}class="Tag AutoGen"{% else %}class="Tag"{% endif %}><a href="tag_{{ tag }}.html">{{ tag }} <span class="Gloss">({{ tagcount }})</span></a></div>
+        {% for disptag, rawtag, tagcount in tagls %}
+          <div {% if prefix %}class="Tag AutoGen"{% else %}class="Tag"{% endif %}><a href="tag_{{ rawtag }}.html">{{ disptag }} <span class="Gloss">({{ tagcount }})</span></a></div>
         {% endfor %}
       </div>
     {% endfor %}
