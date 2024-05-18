@@ -240,6 +240,7 @@ def do_generatepages(app):
 
     taggroupmap = { None: [] }
     for (tag, autogen) in alltags.items():
+        ### TODO: sluggify the middle entry
         if not autogen:
             taggroupmap[None].append( (tag, tag, len(tagmap[tag])) )
         else:
