@@ -224,6 +224,13 @@ body {
     margin-bottom: 6px;
 }
 
+.ToolBox .SubLabel {
+    font-size: 85%;
+    border-top: 1px solid #DDD;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
 .ToolBox .Info {
     font-size: 85%;
     font-style: italic;
