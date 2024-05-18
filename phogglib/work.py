@@ -195,7 +195,16 @@ def do_importfiles(app, filename):
             piccount += 1
             
     logging.info('Imported %d tags for %d pics' % (tagcount, piccount,))
-        
+
+    
+prefixsort = {
+    None: 0,
+    '???': 1,
+    'dir': 2,
+    'year': 3,
+    'month': 4,
+    'day': 5,
+}
 
 def do_generatepages(app):
     curs = app.getdb().cursor()
@@ -239,15 +248,6 @@ def do_generatepages(app):
                 taggroupmap[prefix] = []
             taggroupmap[prefix].append(tag)
 
-    prefixsort = {
-        None: 0,
-        '???': 1,
-        'dir': 2,
-        'year': 3,
-        'month': 4,
-        'day': 5,
-    }
-            
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
     prefixes = list(taggroupmap.keys())
