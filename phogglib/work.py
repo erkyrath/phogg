@@ -222,23 +222,26 @@ def do_generatepages(app):
             pic.thumbheight = imagesize
             pic.thumbwidth = int(imagesize * aspect)
 
-    tem = app.getjenv().get_template('cat.html')
-    filename = os.path.join(app.webgen_path, 'index.html')
-    fl = open(filename, 'w')
-    fl.write(tem.render(pics=picls))
-    fl.close()
-
     tagmap = {}
     for pic in picls:
         for tag in pic.tags:
             if tag not in tagmap:
                 tagmap[tag] = []
             tagmap[tag].append(pic)
+
+    alltagls = list(alltags.items())
+    alltagls.sort(key=lambda tup: (tup[1], tup[0]))
     
+    tem = app.getjenv().get_template('cat.html')
+    filename = os.path.join(app.webgen_path, 'index.html')
+    fl = open(filename, 'w')
+    fl.write(tem.render(pics=picls, alltags=alltagls))
+    fl.close()
+
     for (tag, ls) in tagmap.items():
         # TODO: better tag slugging
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (tag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(pics=ls))
+        fl.write(tem.render(pics=ls, alltags=alltagls))
         fl.close()
         

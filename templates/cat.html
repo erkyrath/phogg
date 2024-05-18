@@ -3,6 +3,12 @@
 {% block content %}
 
 <div id="toolcol">
+  <div class="ToolBox">
+    <div class="Tag"><a href="index.html">(all photos)</a></div>
+    {% for tag, autogen in alltags %}
+      <div class="Tag"><a href="tag_{{ tag }}.html">{{ tag }}</a></div>
+    {% endfor %}
+  </div>
 </div>
 
 <div id="maincol">
