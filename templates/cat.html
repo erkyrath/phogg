@@ -4,9 +4,17 @@
 
 <div id="toolcol">
   <div class="ToolBox">
-    <div class="Tag"><a href="index.html">(all {{ totalcount }} photos)</a></div>
-    {% for tag, autogen, tagcount in alltags %}
-      <div {% if autogen %}class="Tag AutoGen"{% else %}class="Tag"{% endif %}><a href="tag_{{ tag }}.html">{{ tag }} <span class="Gloss">({{ tagcount }})</span></a></div>
+    <div class="TagGroup">
+      <div class="Label">ALL</div>
+      <div class="Tag"><a href="index.html">(all {{ totalcount }} photos)</a></div>
+    </div>
+    {% for prefix, tagls in alltags %}
+      <div class="TagGroup">
+        {% if prefix %}<div class="Label">{{ prefix }}</div>{% endif %}
+        {% for tag, tagcount in tagls %}
+          <div {% if prefix %}class="Tag AutoGen"{% else %}class="Tag"{% endif %}><a href="tag_{{ tag }}.html">{{ tag }} <span class="Gloss">({{ tagcount }})</span></a></div>
+        {% endfor %}
+      </div>
     {% endfor %}
   </div>
 </div>
@@ -21,7 +29,7 @@
                 <div class="Filename">{{ pic.pathname }}</div>
                 <a target=_blank href="/testpics/{{ pic.pathname }}"><img class="Photo" loading="lazy" width="{{ pic.thumbwidth }}" height="{{ pic.thumbheight }}" src="/testpics/{{ pic.pathname }}"></a>
                 <div class="Date">{{ pic.texttime }}</div>
-		{% set comma = joiner(', ') %}
+                {% set comma = joiner(', ') %}
                 <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
               </div>
               <div class="PhotoCellGap"></div>

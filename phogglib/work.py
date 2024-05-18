@@ -229,19 +229,45 @@ def do_generatepages(app):
                 tagmap[tag] = []
             tagmap[tag].append(pic)
 
-    alltagls = [ (tag, autogen, len(tagmap[tag])) for (tag, autogen) in alltags.items() ]
-    alltagls.sort(key=lambda tup: (tup[1], tup[0]))
+    taggroupmap = { None: [] }
+    for (tag, autogen) in alltags.items():
+        if not autogen:
+            taggroupmap[None].append(tag)
+        else:
+            prefix, _, subtag = tag.partition(':')
+            if prefix not in taggroupmap:
+                taggroupmap[prefix] = []
+            taggroupmap[prefix].append(tag)
+
+    prefixsort = {
+        None: 0,
+        '???': 1,
+        'dir': 2,
+        'year': 3,
+        'month': 4,
+        'day': 5,
+    }
+            
+    for prefix in taggroupmap:
+        taggroupmap[prefix].sort()
+    prefixes = list(taggroupmap.keys())
+    prefixes.sort(key=lambda prefix: prefixsort.get(prefix, 1))
+
+    alltaggroups = []
+    for prefix in prefixes:
+        ls = [ (tag, len(tagmap[tag])) for tag in taggroupmap[prefix] ]
+        alltaggroups.append( (prefix, ls) )
     
     tem = app.getjenv().get_template('cat.html')
     filename = os.path.join(app.webgen_path, 'index.html')
     fl = open(filename, 'w')
-    fl.write(tem.render(pics=picls, alltags=alltagls, totalcount=len(picls)))
+    fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls)))
     fl.close()
 
     for (tag, ls) in tagmap.items():
         # TODO: better tag slugging
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (tag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(pics=ls, alltags=alltagls, totalcount=len(picls)))
+        fl.write(tem.render(pics=ls, alltags=alltaggroups, totalcount=len(picls)))
         fl.close()
         
