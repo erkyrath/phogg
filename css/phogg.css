@@ -255,6 +255,11 @@ body {
     color: #666;
 }
 
+.ToolBox .Tag .Gloss {
+    font-size: 85%;
+    color: #666;
+}
+
 .FilterControl .Tag {
     display: inline-block;
     font-size: 85%;

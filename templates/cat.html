@@ -6,7 +6,7 @@
   <div class="ToolBox">
     <div class="Tag"><a href="index.html">(all {{ totalcount }} photos)</a></div>
     {% for tag, autogen, tagcount in alltags %}
-      <div class="Tag"><a href="tag_{{ tag }}.html">{{ tag }} ({{ tagcount }})</a></div>
+      <div class="Tag"><a href="tag_{{ tag }}.html">{{ tag }} <span class="Gloss">({{ tagcount }})</span></a></div>
     {% endfor %}
   </div>
 </div>
