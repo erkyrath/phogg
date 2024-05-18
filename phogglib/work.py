@@ -209,8 +209,16 @@ def do_generatepages(app):
     picls = [ Pic(*tup) for tup in res.fetchall() ]
     picls.sort(key=lambda pic: (pic.timestamp, pic.pathname,))
 
+    imagesize = 180
     for pic in picls:
         pic.fetchtags(app)
+        aspect = pic.width / pic.height
+        if aspect > 1:
+            pic.thumbwidth = imagesize
+            pic.thumbheight = int(imagesize / aspect)
+        else:
+            pic.thumbheight = imagesize
+            pic.thumbwidth = int(imagesize * aspect)
 
     tem = app.getjenv().get_template('cat.html')
     filename = os.path.join(app.webgen_path, 'index.html')
