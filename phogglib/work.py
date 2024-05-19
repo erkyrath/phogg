@@ -241,13 +241,17 @@ def do_generatepages(app):
     taggroupmap = { None: [] }
     for (tag, autogen) in alltags.items():
         ### TODO: sluggify the middle entry
+        if tag not in tagmap:
+            # no pics, skip
+            continue
+        tagcount = len(tagmap[tag])
         if not autogen:
-            taggroupmap[None].append( (tag, tag, len(tagmap[tag])) )
+            taggroupmap[None].append( (tag, tag, tagcount) )
         else:
             prefix, _, subtag = tag.partition(':')
             if prefix not in taggroupmap:
                 taggroupmap[prefix] = []
-            taggroupmap[prefix].append( (subtag, tag, len(tagmap[tag])) )
+            taggroupmap[prefix].append( (subtag, tag, tagcount) )
 
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
