@@ -279,13 +279,38 @@ function adjust_selected_pics(clearall, guids)
 
 function rebuild_alltags()
 {
+    console.log('### rebuild alltags'); //###
+
+    var groupmap = new Map();
+    groupmap.set('', []);
+    
+    for (var tagobj of alltags) {
+        if (!tagobj.autogen) {
+            groupmap.get('').push(tagobj);
+        }
+        else {
+            if (!groupmap.has(tagobj.prefix))
+                groupmap.set(tagobj.prefix, []);
+            groupmap.get(tagobj.prefix).push(tagobj);
+        }
+    }
+
+    var groupkeys = Array.from(groupmap.keys());
+    groupkeys.sort();
     
     var boxel = $('.AllTagBox');
     boxel.empty();
-    for (var tagobj of alltags) {
-        var tag = tagobj.tag;
-        var el = build_tag_el(tag, 'alltag');
-        boxel.append(el);
+
+    for (var grp of groupkeys) {
+        var grpel = $('<div>', { class:'TagGroup' });
+        if (grp)
+            grpel.append($('<div>', { class:'SubLabel' }).text(grp.toUpperCase()));
+        for (var tagobj of groupmap.get(grp)) {
+            var tag = tagobj.tag;
+            var el = build_tag_el(tag, 'alltag');
+            grpel.append(el);
+        }
+        boxel.append(grpel);
     }
 }
 
@@ -454,6 +479,15 @@ function evhan_api_getpics(data, status, jqreq)
         alltags = data.tags;
         for (var tag of alltags) {
             alltagmap.set(tag.tag, tag);
+            if (tag.autogen) {
+                var pos = tag.tag.indexOf(':');
+                tag.prefix = tag.tag.slice(0, pos);
+                tag.subtag = tag.tag.slice(pos+1);
+            }
+            else {
+                tag.prefix = null;
+                tag.subtag = tag.tag;
+            }
         }
     }
     
