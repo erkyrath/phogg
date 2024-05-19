@@ -277,10 +277,12 @@ function adjust_selected_pics(clearall, guids)
     rebuild_and_mark_tags();
 }
 
+let prefixsort = new Map([
+    ['',0], ['???',1], ['dir',2], ['year',3], ['month',4], ['day',5] 
+]);
+
 function rebuild_alltags()
 {
-    console.log('### rebuild alltags'); //###
-
     var groupmap = new Map();
     groupmap.set('', []);
     
@@ -296,7 +298,7 @@ function rebuild_alltags()
     }
 
     var groupkeys = Array.from(groupmap.keys());
-    groupkeys.sort();
+    groupkeys.sort(function(key1, key2) { return prefixsort.get(key1) - prefixsort.get(key2); });
     
     var boxel = $('.AllTagBox');
     boxel.empty();
