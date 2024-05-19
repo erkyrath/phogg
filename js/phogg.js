@@ -279,6 +279,7 @@ function adjust_selected_pics(clearall, guids)
 
 function rebuild_alltags()
 {
+    
     var boxel = $('.AllTagBox');
     boxel.empty();
     for (var tagobj of alltags) {
@@ -321,7 +322,7 @@ function accept_new_tag(newtag)
             flag: true,
         };
 
-        console.log('### settags', dat);
+        //console.log('### settags', dat);
         
         jQuery.ajax('/phogg/api/settags', {
             method: 'POST',
@@ -338,7 +339,7 @@ function check_new_tag(tag)
     if (alltagmap.get(tag.tag))
         return;
 
-    console.log('### adding new tag', tag);
+    //console.log('### adding new tag', tag);
     alltags.push(tag);
     alltagmap.set(tag.tag, tag);
     alltags.sort(tagobj_sort_func);
@@ -486,7 +487,7 @@ function evhan_api_settags(data, status, jqreq)
         display_error('settags: ' + data.error);
         return;
     }
-    console.log('### response', data);
+    //console.log('### response', data);
     
     var tag = data.tag;
     var guids = data.guids;
@@ -701,7 +702,7 @@ function evhan_click_tag(ev)
         flag: flag,
     };
 
-    console.log('### settags', dat);
+    //console.log('### settags', dat);
     
     jQuery.ajax('/phogg/api/settags', {
         method: 'POST',
