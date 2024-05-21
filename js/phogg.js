@@ -335,6 +335,14 @@ function adjust_status_line()
     $('#photostatus .Status').text(msg);
 }
 
+function adjust_undoredo_buttons()
+{
+    $('#undo_button').prop('disabled', (undo_pos == 0));
+    $('#redo_button').prop('disabled', (undo_pos >= undo_stack.length));
+    
+    console.log('### undo pos is', undo_pos, 'of', undo_stack.length);
+}
+
 function accept_new_tag(newtag)
 {
     add_recent_tag(newtag);
@@ -575,8 +583,8 @@ function evhan_api_settags(data, status, jqreq)
             var undogset = new Set(undoent.guids);
             var prevgset = new Set(prevent.guids);
             if (undogset.symmetricDifference(prevgset).size == 0) {
-                console.log('### undid last action!');
                 undo_pos--;
+                adjust_undoredo_buttons();
                 return;
             }
         }
@@ -586,6 +594,7 @@ function evhan_api_settags(data, status, jqreq)
         undo_stack.length = undo_pos;
     undo_stack.push(undoent);
     undo_pos = undo_stack.length;
+    adjust_undoredo_buttons();
 }
 
 function evhan_api_error(jqreq, status, error)
