@@ -186,9 +186,22 @@ body {
 .SizeControl {
     float: right;
     margin-top: 8px;
-    margin-left: 20px;
+    margin-left: 10px;
     margin-right: 20px;
     font-size: 85%;
+}
+
+.ButtonControl {
+    float: right;
+    margin-top: 8px;
+    margin-left: 20px;
+    margin-right: 10px;
+    font-size: 85%;
+}
+
+.ButtonControl button {
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .FilterControl {

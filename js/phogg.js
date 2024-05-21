@@ -766,6 +766,16 @@ function evhan_click_background(ev)
     }
 }
 
+function evhan_select_all(ev)
+{
+    selected.clear();
+    for (var guid of displayed) {
+        selected.add(guid);
+    }
+    adjust_selected_pics(false, Array.from(selected));
+    adjust_status_line();
+}
+
 function tagname_sort_func(t1, t2)
 {
     var tag1 = alltagmap.get(t1);
@@ -840,6 +850,7 @@ $(document).ready(function() {
 
     $('.PhotoGrid').on('click', evhan_click_background);
 
+    $('#selectall_button').on('click', evhan_select_all);
     //### undo? https://github.com/samthor/undoer
 
     $('.InitialText').text('Loading...');
