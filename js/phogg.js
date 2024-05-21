@@ -17,6 +17,9 @@ var imagesize = 180; // 110, 180, 360
 var filtertext = null;
 var filtertags = [];
 
+var undo_stack = [];
+var undo_pos = 0; // next command will go here
+
 function rebuild_pics()
 {
     displayed.clear();
@@ -559,6 +562,30 @@ function evhan_api_settags(data, status, jqreq)
         rebuild_and_mark_tags();
         adjust_status_line();
     }
+
+    var undoent = {
+        tag:tag.tag,
+        guids:Array.from(guids),
+        flag:flag,
+    };
+
+    if (undo_pos > 0 && undo_stack.length > undo_pos-1) {
+        var prevent = undo_stack[undo_pos-1];
+        if (undoent.tag == prevent.tag && undoent.flag == (!prevent.flag) && undoent.guids.length == prevent.guids.length) {
+            var undogset = new Set(undoent.guids);
+            var prevgset = new Set(prevent.guids);
+            if (undogset.symmetricDifference(prevgset).size == 0) {
+                console.log('### undid last action!');
+                undo_pos--;
+                return;
+            }
+        }
+    }
+    
+    if (undo_pos < undo_stack.length)
+        undo_stack.length = undo_pos;
+    undo_stack.push(undoent);
+    undo_pos = undo_stack.length;
 }
 
 function evhan_api_error(jqreq, status, error)
@@ -776,6 +803,14 @@ function evhan_select_all(ev)
     adjust_status_line();
 }
 
+function evhan_undo(ev)
+{
+}
+
+function evhan_redo(ev)
+{
+}
+
 function tagname_sort_func(t1, t2)
 {
     var tag1 = alltagmap.get(t1);
@@ -851,6 +886,8 @@ $(document).ready(function() {
     $('.PhotoGrid').on('click', evhan_click_background);
 
     $('#selectall_button').on('click', evhan_select_all);
+    $('#undo_button').on('click', evhan_undo);
+    $('#redo_button').on('click', evhan_redo);
     //### undo? https://github.com/samthor/undoer
 
     $('.InitialText').text('Loading...');
