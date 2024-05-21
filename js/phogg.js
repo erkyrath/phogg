@@ -585,6 +585,14 @@ function evhan_api_settags(data, status, jqreq)
             return;
         }
     }
+    if (undo_pos < undo_stack.length) {
+        var nextent = undo_stack[undo_pos];
+        if (undoent.tag == nextent.tag && undoent.flag == nextent.flag && array_uniq_equals(undoent.guids, nextent.guids)) {
+            undo_pos++;
+            adjust_undoredo_buttons();
+            return;
+        }
+    }
     
     if (undo_pos < undo_stack.length)
         undo_stack.length = undo_pos;
