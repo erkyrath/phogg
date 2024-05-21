@@ -579,14 +579,10 @@ function evhan_api_settags(data, status, jqreq)
 
     if (undo_pos > 0 && undo_stack.length > undo_pos-1) {
         var prevent = undo_stack[undo_pos-1];
-        if (undoent.tag == prevent.tag && undoent.flag == (!prevent.flag) && undoent.guids.length == prevent.guids.length) {
-            var undogset = new Set(undoent.guids);
-            var prevgset = new Set(prevent.guids);
-            if (undogset.symmetricDifference(prevgset).size == 0) {
-                undo_pos--;
-                adjust_undoredo_buttons();
-                return;
-            }
+        if (undoent.tag == prevent.tag && undoent.flag == (!prevent.flag) && array_uniq_equals(undoent.guids, prevent.guids)) {
+            undo_pos--;
+            adjust_undoredo_buttons();
+            return;
         }
     }
     
@@ -910,6 +906,19 @@ function tab_completion(val)
     }
 
     return newval;
+}
+
+function array_uniq_equals(arr1, arr2)
+{
+    if (arr1.length != arr2.length)
+        return false;
+
+    var set1 = new Set(arr1);
+    var set2 = new Set(arr2);
+    if (set1.symmetricDifference(set2).size != 0)
+        return false;
+
+    return true;
 }
 
 $(document).ready(function() {
