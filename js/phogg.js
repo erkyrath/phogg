@@ -814,10 +814,40 @@ function evhan_select_all(ev)
 
 function evhan_undo(ev)
 {
+    if (undo_pos > 0) {
+        var undoent = {
+            tag: undo_stack[undo_pos-1].tag,
+            flag: !undo_stack[undo_pos-1].flag,
+            guids: Array.from(undo_stack[undo_pos-1].guids),
+        };
+    
+        jQuery.ajax('/phogg/api/settags', {
+            method: 'POST',
+            dataType: 'json',
+            data: undoent,
+            success: evhan_api_settags,
+            error: evhan_api_error,
+        });
+    }
 }
 
 function evhan_redo(ev)
 {
+    if (undo_pos < undo_stack.length) {
+        var redoent = {
+            tag: undo_stack[undo_pos].tag,
+            flag: undo_stack[undo_pos].flag,
+            guids: Array.from(undo_stack[undo_pos].guids),
+        };
+    
+        jQuery.ajax('/phogg/api/settags', {
+            method: 'POST',
+            dataType: 'json',
+            data: redoent,
+            success: evhan_api_settags,
+            error: evhan_api_error,
+        });
+    }
 }
 
 function tagname_sort_func(t1, t2)
