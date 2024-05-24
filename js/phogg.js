@@ -339,8 +339,7 @@ function adjust_undoredo_buttons()
 {
     $('#undo_button').prop('disabled', (undo_pos == 0));
     $('#redo_button').prop('disabled', (undo_pos >= undo_stack.length));
-    
-    console.log('### undo pos is', undo_pos, 'of', undo_stack.length);
+    //console.log('### undo pos is', undo_pos, 'of', undo_stack.length);
 }
 
 function accept_new_tag(newtag)
@@ -944,7 +943,7 @@ $(document).ready(function() {
     $('#selectall_button').on('click', evhan_select_all);
     $('#undo_button').on('click', evhan_undo);
     $('#redo_button').on('click', evhan_redo);
-    //### undo? https://github.com/samthor/undoer
+    //### undo keys? https://github.com/samthor/undoer
 
     $('.InitialText').text('Loading...');
     
