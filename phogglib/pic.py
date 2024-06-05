@@ -109,11 +109,12 @@ def parse_jpeg(pathname):
                         tagtype = (dat[pos+2] << 8) | dat[pos+3]
                         tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
                         #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                        orientation = dat[pos+9]
                     else:
                         tagtype = (dat[pos+3] << 8) | dat[pos+2]
                         tagcount = (dat[pos+7] << 24) | (dat[pos+6] << 16) | (dat[pos+5] << 8) | dat[pos+4]
                         #tagoffset = (dat[pos+11] << 24) | (dat[pos+10] << 16) | (dat[pos+9] << 8) | dat[pos+8]
-                    orientation = dat[pos+9]
+                        orientation = dat[pos+8]
                 if indextag == 0x132:
                     if not littleend:
                         tagtype = (dat[pos+2] << 8) | dat[pos+3]
