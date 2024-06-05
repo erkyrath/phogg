@@ -88,19 +88,41 @@ def parse_jpeg(pathname):
             dat = fl.read(clen-2)
             if dat[0:4] != b'Exif':
                 continue
-            indexcount = (dat[14] << 8) | dat[15]
+            if dat[6:8] == b'MM':
+                backwards = False
+            elif dat[6:8] == b'II':
+                backwards = True
+            else:
+                raise Exception('unrecognized endian marker')
+            if not backwards:
+                indexcount = (dat[14] << 8) | dat[15]
+            else:
+                indexcount = (dat[15] << 8) | dat[14]
             for ix in range(indexcount):
                 pos = 16 + 12*ix
-                indextag = (dat[pos] << 8) | dat[pos+1]
+                if not backwards:
+                    indextag = (dat[pos] << 8) | dat[pos+1]
+                else:
+                    indextag = (dat[pos+1] << 8) | dat[pos]
                 if indextag == 0x0112:
-                    tagtype = (dat[pos+2] << 8) | dat[pos+3]
-                    tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
-                    #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    if not backwards:
+                        tagtype = (dat[pos+2] << 8) | dat[pos+3]
+                        tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
+                        #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    else:
+                        tagtype = (dat[pos+3] << 8) | dat[pos+2]
+                        tagcount = (dat[pos+7] << 24) | (dat[pos+6] << 16) | (dat[pos+5] << 8) | dat[pos+4]
+                        #tagoffset = (dat[pos+11] << 24) | (dat[pos+10] << 16) | (dat[pos+9] << 8) | dat[pos+8]
                     orientation = dat[pos+9]
                 if indextag == 0x132:
-                    tagtype = (dat[pos+2] << 8) | dat[pos+3]
-                    tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
-                    tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    if not backwards:
+                        tagtype = (dat[pos+2] << 8) | dat[pos+3]
+                        tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
+                        tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
+                    else:
+                        tagtype = (dat[pos+3] << 8) | dat[pos+2]
+                        tagcount = (dat[pos+7] << 24) | (dat[pos+6] << 16) | (dat[pos+5] << 8) | dat[pos+4]
+                        tagoffset = (dat[pos+11] << 24) | (dat[pos+10] << 16) | (dat[pos+9] << 8) | dat[pos+8]
                     val = dat[ tagoffset+6 : tagoffset+6+tagcount ]
                     if val[-1] == 0:
                         val = val[ : -1 ]
