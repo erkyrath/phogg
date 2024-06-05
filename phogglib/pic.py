@@ -89,23 +89,23 @@ def parse_jpeg(pathname):
             if dat[0:4] != b'Exif':
                 continue
             if dat[6:8] == b'MM':
-                backwards = False
+                littleend = False
             elif dat[6:8] == b'II':
-                backwards = True
+                littleend = True
             else:
                 raise Exception('unrecognized endian marker')
-            if not backwards:
+            if not littleend:
                 indexcount = (dat[14] << 8) | dat[15]
             else:
                 indexcount = (dat[15] << 8) | dat[14]
             for ix in range(indexcount):
                 pos = 16 + 12*ix
-                if not backwards:
+                if not littleend:
                     indextag = (dat[pos] << 8) | dat[pos+1]
                 else:
                     indextag = (dat[pos+1] << 8) | dat[pos]
                 if indextag == 0x0112:
-                    if not backwards:
+                    if not littleend:
                         tagtype = (dat[pos+2] << 8) | dat[pos+3]
                         tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
                         #tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
@@ -115,7 +115,7 @@ def parse_jpeg(pathname):
                         #tagoffset = (dat[pos+11] << 24) | (dat[pos+10] << 16) | (dat[pos+9] << 8) | dat[pos+8]
                     orientation = dat[pos+9]
                 if indextag == 0x132:
-                    if not backwards:
+                    if not littleend:
                         tagtype = (dat[pos+2] << 8) | dat[pos+3]
                         tagcount = (dat[pos+4] << 24) | (dat[pos+5] << 16) | (dat[pos+6] << 8) | dat[pos+7]
                         tagoffset = (dat[pos+8] << 24) | (dat[pos+9] << 16) | (dat[pos+10] << 8) | dat[pos+11]
