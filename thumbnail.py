@@ -33,8 +33,14 @@ tempfile3 = os.path.join(destdir, '__temp_%s_3.pnm' % (nonce,))
 if imagetype == 'jpeg':
     args = [ 'jpegtopnm', srcpath ]
     outfl = open(tempfile1, 'wb')
-    subprocess.run(args, check=True, stdout=outfl)
+    subprocess.run(args, stdout=outfl)
     outfl.close()
+    # no check=True because jpegtopnm sets an exit status on nonfatal format warnings. Instead we check the output size.
+    outfl = open(tempfile1, 'rb')
+    byt = outfl.read(1)
+    outfl.close()
+    if not len(byt):
+        raise Exception('jpegtopnm failed')
 
     args = [ 'pnmscale', '-xysize', '500', '500', tempfile1 ]
     outfl = open(tempfile2, 'wb')
