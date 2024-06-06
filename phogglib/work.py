@@ -266,13 +266,13 @@ def do_generatepages(app):
     tem = app.getjenv().get_template('cat.html')
     filename = os.path.join(app.webgen_path, 'index.html')
     fl = open(filename, 'w')
-    fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri))
+    fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
     fl.close()
 
     for (tag, ls) in tagmap.items():
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri))
+        fl.write(tem.render(pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
         
