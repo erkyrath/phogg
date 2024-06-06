@@ -144,6 +144,7 @@ body {
 .PhotoCell .Filename {
     font-size: 85%;
     font-weight: bold;
+    word-break: break-all;
     padding: 6px 10px;
 }
 
