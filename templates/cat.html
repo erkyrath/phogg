@@ -26,7 +26,7 @@
               <div class="PhotoCellGap"></div>
               <div class="PhotoCell">
                 <div class="Filename">{{ pic.pathname }}</div>
-                <a target=_blank href="/testpics/{{ pic.pathname }}"><img class="Photo" loading="lazy" width="{{ pic.thumbwidth }}" height="{{ pic.thumbheight }}" src="/testpics/{{ pic.pathname }}"></a>
+                <a target=_blank href="{{ picuri }}/{{ pic.pathname }}"><img class="Photo" loading="lazy" width="{{ pic.thumbwidth }}" height="{{ pic.thumbheight }}" src="{{ picuri }}/{{ pic.pathname }}"></a>
                 <div class="Date">{{ pic.texttime }}</div>
                 {% set comma = joiner(', ') %}
                 <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
