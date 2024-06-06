@@ -7,7 +7,7 @@ import subprocess
 import logging
 
 from phogglib.pic import Pic, parse_jpeg, parse_png
-from phogglib.tag import Tag
+from phogglib.tag import Tag, tagfilename
 
 def do_scandir(app):
     newtags = set()
@@ -240,18 +240,18 @@ def do_generatepages(app):
 
     taggroupmap = { None: [] }
     for (tag, autogen) in alltags.items():
-        ### TODO: sluggify the middle entry
+        ftag = tagfilename(tag)
         if tag not in tagmap:
             # no pics, skip
             continue
         tagcount = len(tagmap[tag])
         if not autogen:
-            taggroupmap[None].append( (tag, tag, tagcount) )
+            taggroupmap[None].append( (tag, ftag, tagcount) )
         else:
             prefix, _, subtag = tag.partition(':')
             if prefix not in taggroupmap:
                 taggroupmap[prefix] = []
-            taggroupmap[prefix].append( (subtag, tag, tagcount) )
+            taggroupmap[prefix].append( (subtag, ftag, tagcount) )
 
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
@@ -270,8 +270,8 @@ def do_generatepages(app):
     fl.close()
 
     for (tag, ls) in tagmap.items():
-        # TODO: better tag slugging
-        filename = os.path.join(app.webgen_path, 'tag_%s.html' % (tag,))
+        ftag = tagfilename(tag)
+        filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
         fl.write(tem.render(pics=ls, alltags=alltaggroups, totalcount=len(picls)))
         fl.close()
