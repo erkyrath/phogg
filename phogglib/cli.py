@@ -1,7 +1,7 @@
 import argparse
 import os, os.path
 
-from phogglib.work import do_scandir, do_exportfiles, do_importfiles, do_thumbnails, do_generatepages
+from phogglib.work import do_scandir, do_exportfiles, do_importfiles, do_thumbnails, do_generatepages, do_uploadpublic
 
 def run(appinstance):
     popt = argparse.ArgumentParser(prog='phogg.wsgi')
@@ -25,6 +25,9 @@ def run(appinstance):
     pcmd = subopt.add_parser('import', help='import tag data to db files')
     pcmd.add_argument('filename')
     pcmd.set_defaults(cmdfunc=cmd_import)
+    
+    pcmd = subopt.add_parser('publicize', help='push public photos out')
+    pcmd.set_defaults(cmdfunc=cmd_publicize)
     
     pcmd = subopt.add_parser('cleantags', help='remove unused tags')
     pcmd.set_defaults(cmdfunc=cmd_cleantags)
@@ -80,6 +83,10 @@ def cmd_export(args, app):
 def cmd_import(args, app):
     print('importing tag data from %s' % (args.filename,))
     do_importfiles(app, args.filename)
+    
+def cmd_publicize(args, app):
+    print('uploading public photos...')
+    do_uploadpublic(app)
     
 def cmd_thumbnail(args, app):
     do_thumbnails(app)

@@ -203,7 +203,46 @@ def do_importfiles(app, filename):
             
     logging.info('Imported %d tags for %d pics' % (tagcount, piccount,))
 
+def do_uploadpublic(app):
+    curs = app.getdb().cursor()
+
+    public = []
+    res = curs.execute('SELECT guid FROM assoc WHERE tag = ?', ('public',))
+    for tup in res.fetchall():
+        public.append(tup[0])
     
+    alreadysent = set()
+    res = curs.execute('SELECT guid FROM assoc WHERE tag = ?', ('flag:uploaded',))
+    for tup in res.fetchall():
+        alreadysent.add(tup[0])
+
+    curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', ('flag:uploaded', True))
+
+    args = app.upload_cmd.split(' ')
+    genargs = [ val for val in args if val ]
+
+    for guid in public:
+        if guid in alreadysent:
+            continue
+        
+        res = curs.execute('SELECT * FROM pics WHERE guid = ?', (guid,))
+        tup = res.fetchone()
+        pic = Pic(*tup)
+        
+        (dirname, filename) = os.path.split(pic.pathname)
+        srcname = os.path.join(app.pic_path, filename)
+        if not dirname:
+            destname = 'pics'
+        else:
+            destname = 'pics/'+dirname
+        args = [ val.replace('$1', srcname).replace('$2', destname) for val in genargs]
+        print('###', args)
+
+        curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, 'flag:uploaded'))
+        
+        print('...uploaded', pic.pathname)
+        
+
 prefixsort = {
     None: 0,
     '???': 1,
@@ -211,6 +250,7 @@ prefixsort = {
     'year': 3,
     'month': 4,
     'day': 5,
+    'flag': 6,
 }
 
 def do_generatepages(app):

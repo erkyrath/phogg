@@ -281,7 +281,7 @@ function adjust_selected_pics(clearall, guids)
 }
 
 let prefixsort = new Map([
-    ['',0], ['???',1], ['dir',2], ['year',3], ['month',4], ['day',5] 
+    ['',0], ['???',1], ['dir',2], ['year',3], ['month',4], ['day',5], ['flag',6]
 ]);
 
 function rebuild_alltags()
