@@ -230,13 +230,23 @@ def do_uploadpublic(app):
         pic = Pic(*tup)
         
         (dirname, filename) = os.path.split(pic.pathname)
-        srcname = os.path.join(app.pic_path, filename)
+        srcname = os.path.join(app.pic_path, pic.pathname)
         if not dirname:
             destname = 'pics'
         else:
             destname = 'pics/'+dirname
         args = [ val.replace('$1', srcname).replace('$2', destname) for val in genargs]
-        print('###', args)
+        subprocess.run(args, check=True)
+
+        if pic.thumbname:
+            (dirname, filename) = os.path.split(pic.thumbname)
+            srcname = os.path.join(app.thumb_path, pic.thumbname)
+            if not dirname:
+                destname = 'thumbs'
+            else:
+                destname = 'thumbs/'+dirname
+            args = [ val.replace('$1', srcname).replace('$2', destname) for val in genargs]
+            subprocess.run(args, check=True)
 
         curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, 'flag:uploaded'))
         
