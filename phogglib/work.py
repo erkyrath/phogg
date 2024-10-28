@@ -140,13 +140,6 @@ def do_exportfiles(app):
     json.dump(dat, fl, indent=2)
     fl.close()
         
-    dat = { 'pics': [ pic.tojson() for pic in picls if 'public' in pic.tags ] }
-    for obj in dat['pics']:
-        obj['tags'].remove('public')
-    fl = open(os.path.join(app.export_path, 'picmap-public.json'), 'w')
-    json.dump(dat, fl, indent=2)
-    fl.close()
-        
 def do_importfiles(app, filename):
     tagmap = dict()
     if filename.endswith('.json'):
@@ -251,7 +244,34 @@ def do_uploadpublic(app):
         curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (guid, 'flag:uploaded'))
         
         print('...uploaded', pic.pathname)
-        
+
+    # See do_exportfiles()...
+    tagauto = dict()
+    res = curs.execute('SELECT tag FROM tags where autogen = ?', (True,))
+    for tup in res.fetchall():
+        tagauto[tup[0]] = 1
+    
+    res = curs.execute('SELECT * FROM pics')
+    picls = [ Pic(*tup) for tup in res.fetchall() ]
+    picls.sort(key=lambda pic: (pic.timestamp, pic.pathname,))
+
+    for pic in picls:
+        pic.fetchtags(app)
+
+    dat = { 'pics': [ pic.tojson() for pic in picls if 'public' in pic.tags ] }
+    for obj in dat['pics']:
+        obj['tags'].remove('public')
+        obj['tags'].remove('flag:uploaded')
+    srcname = os.path.join(app.export_path, 'picmap-public.json')
+    fl = open(srcname, 'w')
+    json.dump(dat, fl, indent=2)
+    fl.close()
+
+    destname = 'picmap-public.json'
+    args = [ val.replace('$1', srcname).replace('$2', destname) for val in genargs]
+    subprocess.run(args, check=True)
+    print('...uploaded', 'picmap-public.json')
+
 
 prefixsort = {
     None: 0,
