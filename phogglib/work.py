@@ -140,6 +140,13 @@ def do_exportfiles(app):
     json.dump(dat, fl, indent=2)
     fl.close()
         
+    dat = { 'pics': [ pic.tojson() for pic in picls if 'public' in pic.tags ] }
+    for obj in dat['pics']:
+        obj['tags'].remove('public')
+    fl = open(os.path.join(app.export_path, 'picmap-public.json'), 'w')
+    json.dump(dat, fl, indent=2)
+    fl.close()
+        
 def do_importfiles(app, filename):
     tagmap = dict()
     if filename.endswith('.json'):
