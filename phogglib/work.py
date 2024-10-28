@@ -253,12 +253,12 @@ def do_generatepages(app):
             continue
         tagcount = len(tagmap[tag])
         if not autogen:
-            taggroupmap[None].append( (tag, ftag, tagcount) )
+            taggroupmap[None].append( (tag, tag, ftag, tagcount) )
         else:
             prefix, _, subtag = tag.partition(':')
             if prefix not in taggroupmap:
                 taggroupmap[prefix] = []
-            taggroupmap[prefix].append( (subtag, ftag, tagcount) )
+            taggroupmap[prefix].append( (tag, subtag, ftag, tagcount) )
 
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
@@ -280,6 +280,6 @@ def do_generatepages(app):
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(tem.render(curtag=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
         

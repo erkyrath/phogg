@@ -260,6 +260,10 @@ body {
     border-radius: 4px;
 }
 
+.ToolBox .Tag.CurTag {
+    background-color: #EC4;
+}
+
 .ToolBox .Tag input {
     pointer-events: none;
 }
