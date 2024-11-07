@@ -709,7 +709,13 @@ function evhan_newtag_keydown(ev)
 
 function evhan_titletext_change()
 {
-    console.log('###', $('#titletext').val());
+    var sel = get_selected();
+    if (sel.length != 1)
+	return;
+
+    var pic = sel[0];
+
+    console.log('###', pic, $('#titletext').val());
 }
 
 function evhan_click_image(ev)

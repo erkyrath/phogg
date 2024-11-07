@@ -2,7 +2,7 @@ import os, os.path
 import time
 
 class Pic:
-    def __init__(self, guid, pathname, type, width, height, orient, timestamp, thumbname=None):
+    def __init__(self, guid, pathname, type, width, height, orient, timestamp, thumbname=None, title=None):
         self.guid = guid
         self.pathname = pathname
         self.type = type
@@ -10,9 +10,13 @@ class Pic:
         self.height = height
         self.orient = orient  # NLRF
         self.timestamp = timestamp
+        
         self.thumbname = None
         if thumbname:
             self.thumbname = thumbname
+        self.title = None
+        if title:
+            self.title = title
 
         self.tags = None
         self.texttime = time.strftime('%b %d, %Y', time.localtime(timestamp))
@@ -45,6 +49,8 @@ class Pic:
             res['tags'] = list(self.tags)
         if self.thumbname:
             res['thumbname'] = self.thumbname
+        if self.title:
+            res['title'] = self.title
         return res
 
 def parse_png(pathname):
