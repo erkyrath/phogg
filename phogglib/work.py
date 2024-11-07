@@ -5,6 +5,7 @@ import uuid
 import json
 import subprocess
 import logging
+import feedgenerator
 
 from phogglib.pic import Pic, parse_jpeg, parse_png
 from phogglib.tag import Tag, tagfilename
@@ -352,4 +353,21 @@ def do_generatepages(app):
         fl = open(filename, 'w')
         fl.write(tem.render(curtag=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
-        
+
+    commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
+    commontags.sort()
+    feed = feedgenerator.Atom1Feed(
+        title = 'Zarf Photographs',
+        description = 'Photographs copyright by Andrew Plotkin. All rights reserved.',
+        link = 'https://eblong.com/zarf/photo',
+        feed_url = 'https://eblong.com/zarf/photo/feed.xml',
+        language = 'en',
+        categories = commontags,
+    )
+    
+    ###
+
+    filename = os.path.join(app.webgen_path, 'feed.xml')
+    fl = open(filename, 'w')
+    feed.write(fl, 'utf-8')
+    fl.close()
