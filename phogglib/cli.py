@@ -24,6 +24,7 @@ def run(appinstance):
     
     pcmd = subopt.add_parser('import', help='import tag data to db files')
     pcmd.add_argument('filename')
+    pcmd.add_argument('-n', '--dry-run', action='store_true', dest='dryrun')
     pcmd.set_defaults(cmdfunc=cmd_import)
     
     pcmd = subopt.add_parser('publicize', help='push public photos out')
@@ -82,7 +83,7 @@ def cmd_export(args, app):
     
 def cmd_import(args, app):
     print('importing tag data from %s' % (args.filename,))
-    do_importfiles(app, args.filename)
+    do_importfiles(app, args.filename, args.dryrun)
     
 def cmd_publicize(args, app):
     print('uploading public photos...')

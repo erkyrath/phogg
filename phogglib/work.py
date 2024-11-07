@@ -141,14 +141,17 @@ def do_exportfiles(app):
     json.dump(dat, fl, indent=2)
     fl.close()
         
-def do_importfiles(app, filename):
+def do_importfiles(app, filename, dryrun=False):
     tagmap = dict()
+    titlemap = dict()
     if filename.endswith('.json'):
         fl = open(filename)
         dat = json.load(fl)
         fl.close()
         for obj in dat['pics']:
             tagmap[obj['pathname']] = obj['tags']
+            if 'title' in obj:
+                titlemap[obj['pathname']] = obj['title']
     else:
         fl = open(filename)
         for ln in fl.readlines():
@@ -162,6 +165,13 @@ def do_importfiles(app, filename):
             tagls = [ val.strip() for val in tags.split(',') ]
             tagmap[pic] = tagls
 
+    if dryrun:
+        for pic in tagmap:
+            print(pic+' (tags):', ', '.join(tagmap[pic]))
+        for pic in titlemap:
+            print(pic+' (title):', titlemap[pic])
+        return
+    
     curs = app.getdb().cursor()
     
     res = curs.execute('SELECT tag FROM tags')
