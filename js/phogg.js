@@ -336,21 +336,21 @@ function adjust_status_line()
     $('#photostatus .Status').text(msg);
 
     if (sel.length == 1) {
-	var pic = allpicmap.get(sel[0]);
-	if (pic && pic.title)
-	    $('#titletext').val(pic.title);
-	else
-	    $('#titletext').val('');
-	$('#titletext').prop('disabled', false);
-	$('#titletext').prop('placeholder', 'Title');
+        var pic = allpicmap.get(sel[0]);
+        if (pic && pic.title)
+            $('#titletext').val(pic.title);
+        else
+            $('#titletext').val('');
+        $('#titletext').prop('disabled', false);
+        $('#titletext').prop('placeholder', 'Title');
     }
     else {
-	$('#titletext').val('');
-	$('#titletext').prop('disabled', true);
-	if (sel.length == 0)
-	    $('#titletext').prop('placeholder', 'No photo selected');
-	else
-	    $('#titletext').prop('placeholder', 'Multiple selection');
+        $('#titletext').val('');
+        $('#titletext').prop('disabled', true);
+        if (sel.length == 0)
+            $('#titletext').prop('placeholder', 'No photo selected');
+        else
+            $('#titletext').prop('placeholder', 'Multiple selection');
     }
 }
 
@@ -716,7 +716,7 @@ function evhan_titletext_change()
 {
     var sel = get_selected();
     if (sel.length != 1)
-	return;
+        return;
 
     var pic = sel[0];
 
