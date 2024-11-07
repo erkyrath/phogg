@@ -163,6 +163,9 @@ body {
 .PhotoCell .Title.Has {
     display: block;
 }
+.PhotoCell .Title.Bold {
+    font-weight: bold;
+}
 
 .PhotoCell .Tags {
     font-size: 85%;
