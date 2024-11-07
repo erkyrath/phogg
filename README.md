@@ -2,7 +2,9 @@
 
 - Designed by Andrew Plotkin <erkyrath@eblong.com>
 
-This is a very simple photo tagging web app. I use it to maintain my personal photo collection (which is not publicly viewable, sorry).
+This is a very simple photo tagging web app. I use it to maintain my [personal photo collection][wwwphoto].
+
+[wwwphoto]: https://eblong.com/zarf/photo/
 
 The idea is that you hand it a directory full of photos. It shows them in a browser window. You can select photos (or groups of photos) and add tags. You can also search and browse by tag. That's all I need it to do, so that's all it does.
 
