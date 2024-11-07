@@ -27,6 +27,9 @@
               <div class="PhotoCell">
                 <div class="Filename">{{ pic.pathname }}</div>
                 <a target=_blank href="{{ picuri }}/{{ pic.pathname }}"><img class="Photo" loading="lazy" width="{{ pic.thumbwidth }}" height="{{ pic.thumbheight }}" {% if pic.thumbname %}src="{{ thumburi }}/{{ pic.thumbname }}"{% else %}src="{{ picuri }}/{{ pic.pathname }}"{% endif %}></a>
+                {% if pic.title %}
+                  <div class="Title Has">{{ pic.title }}</div>
+                {% endif %}
                 <div class="Date">{{ pic.texttime }}</div>
                 {% set comma = joiner(', ') %}
                 <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
