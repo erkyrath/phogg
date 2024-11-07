@@ -627,6 +627,27 @@ function evhan_api_settags(data, status, jqreq)
     adjust_undoredo_buttons();
 }
 
+function evhan_api_settitle(data, status, jqreq)
+{
+    if (data.error) {
+        display_error('settitle: ' + data.error);
+        return;
+    }
+    //console.log('### response', data);
+
+    var title = data.title;
+    var guid = data.guid;
+
+    var el = $('#cell-'+guid+' .Title');
+    if (title) {
+        el.text(title);
+        el.addClass('Has');
+    }
+    else {
+        el.removeClass('Has');
+    }
+}
+
 function evhan_api_error(jqreq, status, error)
 {
     display_error(jqreq.responseText);
@@ -727,8 +748,20 @@ function evhan_titletext_change()
         return;
 
     var pic = sel[0];
+    var title = $('#titletext').val();
 
-    console.log('###', pic, $('#titletext').val());
+    var dat = {
+        guid: pic,
+        title: title,
+    };
+    
+    jQuery.ajax('/phogg/api/settitle', {
+        method: 'POST',
+        dataType: 'json',
+        data: dat,
+        success: evhan_api_settitle,
+        error: evhan_api_error,
+    });
 }
 
 function evhan_click_image(ev)
