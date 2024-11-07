@@ -235,6 +235,7 @@ body {
 .ToolBox .Label {
     font-size: 85%;
     text-decoration: underline;
+    text-decoration-style: dotted;
     margin-bottom: 6px;
 }
 
