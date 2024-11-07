@@ -319,6 +319,7 @@ function rebuild_alltags()
     }
 }
 
+// Also the title box, while we're at it
 function adjust_status_line()
 {
     var msg = '' + allpics.length + ' images';
@@ -333,6 +334,19 @@ function adjust_status_line()
     }
 
     $('#photostatus .Status').text(msg);
+
+    if (sel.length == 1) {
+	$('#titletext').prop('disabled', false);
+	$('#titletext').prop('placeholder', 'Title');
+    }
+    else {
+	$('#titletext').val('');
+	$('#titletext').prop('disabled', true);
+	if (sel.length == 0)
+	    $('#titletext').prop('placeholder', 'No photo selected');
+	else
+	    $('#titletext').prop('placeholder', 'Multiple selection');
+    }
 }
 
 function adjust_undoredo_buttons()
@@ -693,6 +707,11 @@ function evhan_newtag_keydown(ev)
     }
 }
 
+function evhan_titletext_change()
+{
+    console.log('###', $('#titletext').val());
+}
+
 function evhan_click_image(ev)
 {
     var guid = ev.data.guid;
@@ -937,6 +956,8 @@ $(document).ready(function() {
     $('#filtertext').on('keydown', evhan_filtertext_keydown);
     
     $('#newtagtext').on('keydown', evhan_newtag_keydown);
+
+    $('#titletext').on('change', evhan_titletext_change);
 
     $('.PhotoGrid').on('click', evhan_click_background);
 
