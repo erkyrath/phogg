@@ -88,12 +88,37 @@ class han_SetTags(ReqHandler):
         }
         yield(json.dumps(dat))
 
+class han_SetTitle(ReqHandler):
+    def do_post(self, req):
+        guid = req.get_input_field('guid')
+        title = req.get_input_field('title')
+
+        if not title:
+            title = ''
+        title = title.strip()
+
+        curs = self.app.getdb().cursor()
+        res = curs.execute('SELECT title FROM pics WHERE guid = ?', (guid,))
+        tup = res.fetchone()
+        if not tup:
+            dat = { 'error': 'no matching picture' }
+            yield(json.dumps(dat))
+            return
+
+        curs.execute('UPDATE pics SET title = ? WHERE guid = ?', (title, guid,))
+        dat = {
+            'guid': guid,
+            'title': title,
+        }
+        yield(json.dumps(dat))
+
 
 # Create the master handler list.
 handlers = [
     ('', han_Home),
     ('/api/getpics', han_GetPics),
     ('/api/settags', han_SetTags),
+    ('/api/settitle', han_SetTitle),
 ]
 
 appinstance = None

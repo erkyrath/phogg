@@ -638,6 +638,10 @@ function evhan_api_settitle(data, status, jqreq)
     var title = data.title;
     var guid = data.guid;
 
+    var pic = allpicmap.get(guid);
+    if (pic)
+        pic.title = title;
+
     var el = $('#cell-'+guid+' .Title');
     if (title) {
         el.text(title);
