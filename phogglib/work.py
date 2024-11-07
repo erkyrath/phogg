@@ -207,6 +207,15 @@ def do_importfiles(app, filename, dryrun=False):
             
     logging.info('Imported %d tags for %d pics' % (tagcount, piccount,))
 
+    titlecount = 0
+    
+    for (pathname, title) in titlemap.items():
+        curs.execute('UPDATE pics SET title = ? WHERE pathname = ?', (title, pathname,))
+        titlecount += 1
+
+    if titlecount:
+        logging.info('Imported %d titles for pics' % (titlecount,))
+
 def do_uploadpublic(app):
     curs = app.getdb().cursor()
 
