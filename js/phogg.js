@@ -72,7 +72,15 @@ function build_pic_el(pic)
     cellel.append(imgel);
     imgel.on('click', { guid:pic.guid, index:pic.index }, evhan_click_image);
 
+    var titleel = $('<div>', { class:'Title' });
+    if (pic.title) {
+        titleel.text(pic.title);
+        titleel.addClass('Has');
+    }
+    cellel.append(titleel);
+
     cellel.append($('<div>', { class:'Date' }).text(pic.texttime));
+    
     var tagtext = '';
     if (pic.tags) {
         var showtags = [];

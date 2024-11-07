@@ -154,6 +154,16 @@ body {
     padding: 6px 10px;
 }
 
+.PhotoCell .Title {
+    display: none;
+    font-size: 75%;
+    font-style: italic;
+    padding: 6px 10px 0px 10px;
+}
+.PhotoCell .Title.Has {
+    display: block;
+}
+
 .PhotoCell .Tags {
     font-size: 85%;
     padding: 6px 10px;
