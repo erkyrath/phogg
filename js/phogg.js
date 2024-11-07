@@ -336,6 +336,11 @@ function adjust_status_line()
     $('#photostatus .Status').text(msg);
 
     if (sel.length == 1) {
+	var pic = allpicmap.get(sel[0]);
+	if (pic && pic.title)
+	    $('#titletext').val(pic.title);
+	else
+	    $('#titletext').val('');
 	$('#titletext').prop('disabled', false);
 	$('#titletext').prop('placeholder', 'Title');
     }
