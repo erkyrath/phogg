@@ -357,15 +357,24 @@ def do_generatepages(app):
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
-        title = 'Zarf Photographs',
+        title = 'Zarf Photographs', ### configize
         description = 'Photographs copyright by Andrew Plotkin. All rights reserved.',
         link = 'https://eblong.com/zarf/photo',
         feed_url = 'https://eblong.com/zarf/photo/feed.xml',
         language = 'en',
         categories = commontags,
     )
-    
-    ###
+
+    feedpicls = picls[ 0 : 4 ] ###
+    for pic in feedpicls:
+        feed.add_item(
+            title = 'Photograph',
+            description = 'Photograph copyright by Andrew Plotkin. All rights reserved.',
+            link = pic.pathname, ###
+            author_name = "self.ctx.config['ownername']",
+            categories = pic.tags,
+            pubdate = datetime.datetime.fromtimestamp(pic.timestamp),
+        )
 
     filename = os.path.join(app.webgen_path, 'feed.xml')
     fl = open(filename, 'w')
