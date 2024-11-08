@@ -410,7 +410,7 @@ def do_generatepages(app):
         fl.close()
 
     # The RSS feed
-    commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
+    commontags = [ tag for (tag, autogen) in alltags.items() if tag in tagmap and not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
         title = app.webgen_title,
