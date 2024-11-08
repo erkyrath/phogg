@@ -28,6 +28,7 @@ class PhoggApp(TinyApp):
 
         self.webgen_path = config['WebGen'].get('BasePath')
         self.webgen_url = config['WebGen'].get('BaseURL')
+        self.webgen_maxcount = int(config['WebGen'].get('MaxCount', 48))
         self.webgen_title = config['WebGen'].get('Title', 'Photos')
         self.webgen_desc = config['WebGen'].get('Desc', 'A Phogg site')
         self.webgen_author = config['WebGen'].get('Author', 'Name')

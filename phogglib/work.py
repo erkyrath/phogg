@@ -410,7 +410,7 @@ def do_generatepages(app):
         categories = commontags,
     )
 
-    feedpicls = picls[ 0 : 4 ] ###
+    feedpicls = picls[ 0 : app.webgen_maxcount ]
     for pic in feedpicls:
         feed.add_item(
             title = 'Photograph',
