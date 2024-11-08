@@ -10,6 +10,7 @@ from tinyapp.handler import ReqHandler
 import tinyapp.auth
 
 from phogglib.work import do_scandir
+import phogglib.jextension
 
 class PhoggApp(TinyApp):
     def __init__(self, config, hanclasses):
@@ -52,6 +53,7 @@ class PhoggApp(TinyApp):
             jenv = Environment(
                 loader = FileSystemLoader(self.template_path),
                 extensions = [
+                    phogglib.jextension.TagFilename,
                 ],
                 autoescape = select_autoescape(),
                 keep_trailing_newline = True,
