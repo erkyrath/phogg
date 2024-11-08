@@ -379,7 +379,7 @@ def do_generatepages(app):
     for pic in picls:
         filename = os.path.join(app.webgen_path, pic.singlename)
         fl = open(filename, 'w')
-        fl.write(temone.render(pagetitle=pic.pathname, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(temone.render(pagetitle=pic.pathname, usehomelink=True, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
     # The tag pages
@@ -387,7 +387,7 @@ def do_generatepages(app):
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(curtag=tag, pagetitle=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(tem.render(curtag=tag, pagetitle=tag, usehomelink=True, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
     # The RSS feed

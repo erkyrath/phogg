@@ -12,7 +12,9 @@
 <body>
   <div id="header">
     <div id="headercol">
-      <h1>Photos</h1>
+      <h1>
+      {%- if usehomelink %}<a href=".">Photos</a>{% else %}Photos{% endif -%}
+      </h1>
     </div>
   </div>
   <div id="body">
