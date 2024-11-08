@@ -349,12 +349,12 @@ def do_generatepages(app):
             continue
         tagcount = len(tagmap[tag])
         if not autogen:
-            taggroupmap[None].append( (tag, tag, ftag, tagcount) )
+            taggroupmap[None].append( (tag, tag, tagcount) )
         else:
             prefix, _, subtag = tag.partition(':')
             if prefix not in taggroupmap:
                 taggroupmap[prefix] = []
-            taggroupmap[prefix].append( (tag, subtag, ftag, tagcount) )
+            taggroupmap[prefix].append( (tag, subtag, tagcount) )
 
     for prefix in taggroupmap:
         taggroupmap[prefix].sort()
