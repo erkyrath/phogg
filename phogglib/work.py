@@ -319,6 +319,7 @@ def do_generatepages(app):
     imagesize = 180
     imagesizeone = 500
     for pic in picls:
+        pic.singlename = 'photo_%s.html' % (pic.pathname.replace('/', '::'))
         pic.fetchtags(app)
         pic.tags.sort(key=lambda tag: (alltags.get(tag, 0), tag))
         aspect = pic.width / pic.height
@@ -374,7 +375,7 @@ def do_generatepages(app):
     fl.close()
 
     for pic in picls:
-        filename = os.path.join(app.webgen_path, 'photo_%s.html' % (pic.pathname.replace('/', '::'),))
+        filename = os.path.join(app.webgen_path, pic.singlename)
         fl = open(filename, 'w')
         fl.write(temone.render(pagetitle=pic.pathname, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
