@@ -209,25 +209,32 @@ body {
 }
 
 .PhotoFrame {
-    margin-top: 20px;
     display: inline-block;
     position: relative;
 }
 
+.PhotoFrame .Photo {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
 .PhotoFrame .Date {
     font-style: italic;
-    padding: 6px 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .PhotoFrame .Title {
     font-style: italic;
     font-weight: bold;
-    padding: 6px 10px 0px 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .PhotoFrame .Tags {
     font-size: 85%;
-    padding: 6px 10px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 
 .SizeControl {
