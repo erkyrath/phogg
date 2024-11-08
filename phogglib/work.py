@@ -304,6 +304,11 @@ prefixsort = {
 }
 
 def do_generatepages(app):
+    if not app.webgen_path:
+        raise Exception('WebGen:BasePath not set in config')
+    if not app.webgen_url:
+        raise Exception('WebGen:BaseURL not set in config')
+    
     curs = app.getdb().cursor()
 
     alltags = dict()
@@ -397,8 +402,8 @@ def do_generatepages(app):
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
-        title = 'Zarf Photographs', ### configize
-        description = 'Photographs copyright by Andrew Plotkin. All rights reserved.',
+        title = app.webgen_title,
+        description = app.webgen_desc,
         link = app.webgen_url,
         feed_url = baseurl + '/feed.xml',
         language = 'en',
