@@ -11,7 +11,7 @@
       <div class="TagGroup">
         {% if prefix %}<div class="SubLabel">{{ prefix|upper }}</div>{% endif %}
         {% for origtag, disptag, rawtag, tagcount in tagls %}
-          <div class="Tag{% if prefix %} AutoGen{% endif %}{% if origtag == curtag %} CurTag{% endif %}"><a href="tag_{{ rawtag }}.html">{{ disptag }} <span class="Gloss">({{ tagcount }})</span></a></div>
+          <div class="Tag{% if prefix %} AutoGen{% endif %}{% if origtag == curtag %} CurTag{% endif %}"><a href="tag_{{ origtag|tagfilename }}.html">{{ disptag }} <span class="Gloss">({{ tagcount }})</span></a></div>
         {% endfor %}
       </div>
     {% endfor %}
