@@ -391,13 +391,16 @@ def do_generatepages(app):
         fl.close()
 
     # The RSS feed
+    baseurl = app.webgen_url
+    if baseurl.endswith('/'):
+        baseurl = baseurl[ : -1 ]
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
         title = 'Zarf Photographs', ### configize
         description = 'Photographs copyright by Andrew Plotkin. All rights reserved.',
-        link = 'https://eblong.com/zarf/photo',
-        feed_url = 'https://eblong.com/zarf/photo/feed.xml',
+        link = app.webgen_url,
+        feed_url = baseurl + '/feed.xml',
         language = 'en',
         categories = commontags,
     )
@@ -407,7 +410,7 @@ def do_generatepages(app):
         feed.add_item(
             title = 'Photograph',
             description = 'Photograph copyright by Andrew Plotkin. All rights reserved.',
-            link = pic.pathname, ###
+            link = baseurl + '/' + pic.singlename,
             author_name = "self.ctx.config['ownername']",
             categories = pic.tags,
             pubdate = datetime.datetime.fromtimestamp(pic.timestamp),

@@ -25,6 +25,7 @@ class PhoggApp(TinyApp):
         self.thumb_path = config['DEFAULT']['ThumbPath']
         self.export_path = config['DEFAULT']['ExportPath']
         self.webgen_path = config['DEFAULT']['WebGenPath']
+        self.webgen_url = config['DEFAULT']['WebGenURL']
         self.upload_cmd = config['DEFAULT']['UploadCmd']
         
         # Thread-local storage for various things which are not thread-safe.
