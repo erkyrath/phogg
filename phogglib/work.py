@@ -317,6 +317,7 @@ def do_generatepages(app):
     picls.sort(key=lambda pic: (-pic.timestamp, pic.pathname,))
 
     imagesize = 180
+    imagesizeone = 500
     for pic in picls:
         pic.fetchtags(app)
         pic.tags.sort(key=lambda tag: (alltags.get(tag, 0), tag))
@@ -324,9 +325,13 @@ def do_generatepages(app):
         if aspect > 1:
             pic.thumbwidth = imagesize
             pic.thumbheight = int(imagesize / aspect)
+            pic.framewidth = imagesizeone
+            pic.frameheight = int(imagesizeone / aspect)
         else:
             pic.thumbheight = imagesize
             pic.thumbwidth = int(imagesize * aspect)
+            pic.frameheight = imagesizeone
+            pic.framewidth = int(imagesizeone * aspect)
 
     tagmap = {}
     for pic in picls:
@@ -361,10 +366,18 @@ def do_generatepages(app):
         alltaggroups.append( (prefix, ls) )
     
     tem = app.getjenv().get_template('cat.html')
+    temone = app.getjenv().get_template('single.html')
+    
     filename = os.path.join(app.webgen_path, 'index.html')
     fl = open(filename, 'w')
     fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
     fl.close()
+
+    for pic in picls:
+        filename = os.path.join(app.webgen_path, 'photo_%s.html' % (pic.pathname.replace('/', '::'),))
+        fl = open(filename, 'w')
+        fl.write(temone.render(pagetitle=pic.pathname, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.close()
 
     for (tag, ls) in tagmap.items():
         ftag = tagfilename(tag)
@@ -373,6 +386,7 @@ def do_generatepages(app):
         fl.write(tem.render(curtag=tag, pagetitle=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
+        
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
