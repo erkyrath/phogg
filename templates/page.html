@@ -6,6 +6,9 @@
   <title>
     {%- if not pagetitle %}Photos{% else %}Photos: {{ pagetitle }}{% endif -%}
   </title>
+  {% if feedurl %}
+    <link rel="alternate" type="application/atom+xml" title="Feed (atom)" href="{{ feedurl }}">
+  {% endif %}
   <link rel="stylesheet" href="/css/phogg.css" type="text/css">
   {% block exthead %}{% endblock %}
 </head>

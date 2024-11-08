@@ -309,6 +309,11 @@ def do_generatepages(app):
     if not app.webgen_url:
         raise Exception('WebGen:BaseURL not set in config')
     
+    baseurl = app.webgen_url
+    if baseurl.endswith('/'):
+        baseurl = baseurl[ : -1 ]
+    feedurl = baseurl + '/feed.xml'
+
     curs = app.getdb().cursor()
 
     alltags = dict()
@@ -377,14 +382,14 @@ def do_generatepages(app):
     # The whole list
     filename = os.path.join(app.webgen_path, 'index.html')
     fl = open(filename, 'w')
-    fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
+    fl.write(tem.render(feedurl=feedurl, pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
     fl.close()
 
     # The single-photo frames
     for pic in picls:
         filename = os.path.join(app.webgen_path, pic.singlename)
         fl = open(filename, 'w')
-        fl.write(temone.render(pagetitle=pic.pathname, usehomelink=True, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(temone.render(feedurl=feedurl, pagetitle=pic.pathname, usehomelink=True, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
     # The tag pages
@@ -392,20 +397,17 @@ def do_generatepages(app):
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(curtag=tag, pagetitle=tag, usehomelink=True, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(tem.render(feedurl=feedurl, curtag=tag, pagetitle=tag, usehomelink=True, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
     # The RSS feed
-    baseurl = app.webgen_url
-    if baseurl.endswith('/'):
-        baseurl = baseurl[ : -1 ]
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
         title = app.webgen_title,
         description = app.webgen_desc,
         link = app.webgen_url,
-        feed_url = baseurl + '/feed.xml',
+        feed_url = feedurl,
         language = 'en',
         categories = commontags,
     )
