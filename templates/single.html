@@ -1,0 +1,19 @@
+{% extends "page.html" %}
+
+{% block content %}
+
+<div id="singlecol">
+  <div class="PhotoFrameBox">
+    <div class="PhotoFrame">
+      <a target=_blank href="{{ picuri }}/{{ pic.pathname }}"><img class="Photo" loading="lazy" width="{{ pic.framewidth }}" height="{{ pic.frameheight }}" {% if pic.thumbname %}src="{{ thumburi }}/{{ pic.thumbname }}"{% else %}src="{{ picuri }}/{{ pic.pathname }}"{% endif %}></a>
+      {% if pic.title %}
+        <div class="Title">{{ pic.title }}</div>
+      {% endif %}
+      <div class="Date">{{ pic.texttime }}</div>
+      {% set comma = joiner(', ') %}
+      <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
