@@ -368,18 +368,21 @@ def do_generatepages(app):
     
     tem = app.getjenv().get_template('cat.html')
     temone = app.getjenv().get_template('single.html')
-    
+
+    # The whole list
     filename = os.path.join(app.webgen_path, 'index.html')
     fl = open(filename, 'w')
     fl.write(tem.render(pics=picls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
     fl.close()
 
+    # The single-photo frames
     for pic in picls:
         filename = os.path.join(app.webgen_path, pic.singlename)
         fl = open(filename, 'w')
         fl.write(temone.render(pagetitle=pic.pathname, pic=pic, picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
+    # The tag pages
     for (tag, ls) in tagmap.items():
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
@@ -387,7 +390,7 @@ def do_generatepages(app):
         fl.write(tem.render(curtag=tag, pagetitle=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
-        
+    # The RSS feed
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
     commontags.sort()
     feed = feedgenerator.Atom1Feed(
