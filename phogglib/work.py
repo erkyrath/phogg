@@ -416,7 +416,7 @@ def do_generatepages(app):
             title = 'Photograph',
             description = pic.title if pic.title else 'Photo',
             link = baseurl + '/' + pic.singlename,
-            author_name = "###self.ctx.config['ownername']",
+            author_name = app.webgen_author,
             categories = pic.tags,
             pubdate = datetime.datetime.fromtimestamp(pic.timestamp),
         )
