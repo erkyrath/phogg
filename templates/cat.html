@@ -32,7 +32,7 @@
                 {% endif %}
                 <div class="Date">{{ pic.texttime }}</div>
                 {% set comma = joiner(', ') %}
-                <div class="Tags">{% for tag in pic.tags %}{{ comma() }}{{ tag }}{% endfor %}</div>
+                <div class="Tags">{% for tag in pic.tags %}{{ comma() }}<a href="tag_{{ tag|tagfilename }}.html">{{ tag }}</a>{% endfor %}</div>
               </div>
               <div class="PhotoCellGap"></div>
           </div>
