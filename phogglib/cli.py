@@ -97,6 +97,8 @@ def cmd_cleantags(args, app):
     res = curs.execute('SELECT tag FROM tags')
     alltags = [ tag[0] for tag in res.fetchall() ]
 
+    ### should also delete from assocs where guid is not in pics!
+
     removed = []
     for tag in alltags:
         res = curs.execute('SELECT guid FROM assoc WHERE tag = ?', (tag,))
