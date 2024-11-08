@@ -35,6 +35,13 @@ body {
     bottom: 0px;
 }
 
+#singlecol {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    height: 100%;
+}
+
 #toolcol {
     position: absolute;
     left: 0px;
@@ -195,6 +202,32 @@ body {
 .PhotoCellBox.Selected .PhotoCell .OutButton a:hover {
     color: black;
     background: white;
+}
+
+.PhotoFrameBox {
+    text-align: center;
+}
+
+.PhotoFrame {
+    margin-top: 20px;
+    display: inline-block;
+    position: relative;
+}
+
+.PhotoFrame .Date {
+    font-style: italic;
+    padding: 6px 10px;
+}
+
+.PhotoFrame .Title {
+    font-style: italic;
+    font-weight: bold;
+    padding: 6px 10px 0px 10px;
+}
+
+.PhotoFrame .Tags {
+    font-size: 85%;
+    padding: 6px 10px;
 }
 
 .SizeControl {
