@@ -409,9 +409,9 @@ def do_generatepages(app):
     for pic in feedpicls:
         feed.add_item(
             title = 'Photograph',
-            description = 'Photograph copyright by Andrew Plotkin. All rights reserved.',
+            description = pic.title if pic.title else 'Photo',
             link = baseurl + '/' + pic.singlename,
-            author_name = "self.ctx.config['ownername']",
+            author_name = "###self.ctx.config['ownername']",
             categories = pic.tags,
             pubdate = datetime.datetime.fromtimestamp(pic.timestamp),
         )
