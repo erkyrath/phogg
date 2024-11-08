@@ -210,6 +210,15 @@ def do_importfiles(app, filename, dryrun=False):
     titlecount = 0
     
     for (pathname, title) in titlemap.items():
+        res = curs.execute('SELECT title FROM pics WHERE pathname = ?', (pathname,))
+        tup = res.fetchone()
+        if not tup:
+            print('no such image: %s' % (pathname,))
+            continue
+
+        if tup[0] == title:
+            continue
+        
         curs.execute('UPDATE pics SET title = ? WHERE pathname = ?', (title, pathname,))
         titlecount += 1
 
