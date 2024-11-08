@@ -30,8 +30,9 @@ class PhoggApp(TinyApp):
         self.webgen_url = config['WebGen'].get('BaseURL')
         self.webgen_maxcount = int(config['WebGen'].get('MaxCount', 48))
         self.webgen_title = config['WebGen'].get('Title', 'Photos')
-        self.webgen_desc = config['WebGen'].get('Desc', 'A Phogg site')
         self.webgen_author = config['WebGen'].get('Author', 'Name')
+        self.webgen_desc = config['WebGen'].get('Desc', 'A Phogg site')
+        self.webgen_photodesc = config['WebGen'].get('PhotoDesc', self.webgen_desc)
         
         # Thread-local storage for various things which are not thread-safe.
         self.threadcache = threading.local()

@@ -415,8 +415,8 @@ def do_generatepages(app):
     feedpicls = picls[ 0 : app.webgen_maxcount ]
     for pic in feedpicls:
         feed.add_item(
-            title = 'Photograph',
-            description = pic.title if pic.title else 'Photo',
+            title = pic.title if pic.title else 'Photograph',
+            description = app.webgen_photodesc,
             link = baseurl + '/' + pic.singlename,
             author_name = app.webgen_author,
             categories = pic.tags,
