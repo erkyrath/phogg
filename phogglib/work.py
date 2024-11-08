@@ -370,7 +370,7 @@ def do_generatepages(app):
         ftag = tagfilename(tag)
         filename = os.path.join(app.webgen_path, 'tag_%s.html' % (ftag,))
         fl = open(filename, 'w')
-        fl.write(tem.render(curtag=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
+        fl.write(tem.render(curtag=tag, pagetitle=tag, pics=ls, alltags=alltaggroups, totalcount=len(picls), picuri=app.pic_uri, thumburi=app.thumb_uri))
         fl.close()
 
     commontags = [ tag for (tag, autogen) in alltags.items() if not autogen ]
