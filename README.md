@@ -20,8 +20,7 @@ I'm afraid the install is not a documented procedure. I hacked it together on my
 A couple of hints:
 
 - For Apache, you have to enable the [`mod_wsgi`][mod_wsgi] module. 
-- Steal the [`tinyapp`][tinyapp] module out of the [`ifarchive-admintool`][admintool] repository. (Yeah, I really need to split that out as its own project.)
+- Install the [`tinyapp`][tinyapp] module somewhere in your Python path or `WSGIPythonPath`.
 
 [admintool]: https://github.com/iftechfoundation/ifarchive-admintool
-[tinyapp]: https://github.com/iftechfoundation/ifarchive-admintool/tree/main/tinyapp
-
+[tinyapp]: https://github.com/erkyrath/tinyapp
