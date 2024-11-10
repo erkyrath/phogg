@@ -343,12 +343,27 @@ function adjust_status_line()
 
     $('#photostatus .Status').text(msg);
 
-    if (sel.length == 1) {
+    var sametitle = null;
+    var allsametitle = true;
+    if (sel.length > 0) {
+        sametitle = '';
         var pic = allpicmap.get(sel[0]);
         if (pic && pic.title)
-            $('#titletext').val(pic.title);
-        else
-            $('#titletext').val('');
+            sametitle = pic.title;
+        for (var key of sel) {
+            var pic = allpicmap.get(key);
+            var title = '';
+            if (pic && pic.title)
+                title = pic.title;
+            if (title != sametitle) {
+                allsametitle = false;
+                break;
+            }
+        }
+    }
+
+    if (sel.length >= 1 && allsametitle) {
+        $('#titletext').val(sametitle);
         $('#titletext').prop('disabled', false);
         $('#titletext').prop('placeholder', 'Title');
     }
