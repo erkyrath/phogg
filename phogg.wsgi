@@ -88,26 +88,38 @@ class han_SetTags(ReqHandler):
         }
         yield(json.dumps(dat))
 
-class han_SetTitle(ReqHandler):
+class han_SetTitles(ReqHandler):
     def do_post(self, req):
-        guid = req.get_input_field('guid')
         title = req.get_input_field('title')
+        # Not sure where the '[]' comes from -- jQuery?
+        guids = req.input.get('guids[]')
 
         if not title:
             title = ''
         title = title.strip()
 
-        curs = self.app.getdb().cursor()
-        res = curs.execute('SELECT title FROM pics WHERE guid = ?', (guid,))
-        tup = res.fetchone()
-        if not tup:
-            dat = { 'error': 'no matching picture' }
+        resguids = []
+        for guid in guids:
+            curs = self.app.getdb().cursor()
+            res = curs.execute('SELECT title FROM pics WHERE guid = ?', (guid,))
+            tup = res.fetchone()
+            if not tup:
+                continue
+
+            oldtitle = (tup[0] or '')
+            if title == oldtitle:
+                continue
+            
+            curs.execute('UPDATE pics SET title = ? WHERE guid = ?', (title, guid,))
+            resguids.append(guid)
+            
+        if not resguids:
+            dat = { 'error': 'no pictures selected' }
             yield(json.dumps(dat))
             return
-
-        curs.execute('UPDATE pics SET title = ? WHERE guid = ?', (title, guid,))
+        
         dat = {
-            'guid': guid,
+            'guids': resguids,
             'title': title,
         }
         yield(json.dumps(dat))
@@ -118,7 +130,7 @@ handlers = [
     ('', han_Home),
     ('/api/getpics', han_GetPics),
     ('/api/settags', han_SetTags),
-    ('/api/settitle', han_SetTitle),
+    ('/api/settitles', han_SetTitles),
 ]
 
 appinstance = None

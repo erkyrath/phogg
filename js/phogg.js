@@ -642,28 +642,30 @@ function evhan_api_settags(data, status, jqreq)
     adjust_undoredo_buttons();
 }
 
-function evhan_api_settitle(data, status, jqreq)
+function evhan_api_settitles(data, status, jqreq)
 {
     if (data.error) {
-        display_error('settitle: ' + data.error);
+        display_error('settitles: ' + data.error);
         return;
     }
     //console.log('### response', data);
 
     var title = data.title;
-    var guid = data.guid;
+    var guids = data.guids;
 
-    var pic = allpicmap.get(guid);
-    if (pic)
-        pic.title = title;
-
-    var el = $('#cell-'+guid+' .Title');
-    if (title) {
-        el.text(title);
-        el.addClass('Has');
-    }
-    else {
-        el.removeClass('Has');
+    for (var guid of guids) {
+        var pic = allpicmap.get(guid);
+        if (pic)
+            pic.title = title;
+        
+        var el = $('#cell-'+guid+' .Title');
+        if (title) {
+            el.text(title);
+            el.addClass('Has');
+        }
+        else {
+            el.removeClass('Has');
+        }
     }
 }
 
@@ -763,22 +765,21 @@ function evhan_newtag_keydown(ev)
 function evhan_titletext_change()
 {
     var sel = get_selected();
-    if (sel.length != 1)
+    if (sel.length == 0)
         return;
 
-    var pic = sel[0];
     var title = $('#titletext').val();
 
     var dat = {
-        guid: pic,
+        guids: sel,
         title: title,
     };
     
-    jQuery.ajax('/phogg/api/settitle', {
+    jQuery.ajax('/phogg/api/settitles', {
         method: 'POST',
         dataType: 'json',
         data: dat,
-        success: evhan_api_settitle,
+        success: evhan_api_settitles,
         error: evhan_api_error,
     });
 }
