@@ -141,9 +141,11 @@ def do_exportfiles(app):
     json.dump(dat, fl, indent=2)
     fl.close()
         
-def do_importfiles(app, filename, dryrun=False):
+def do_importfiles(app, filename, timestamps=False, dryrun=False):
     tagmap = dict()
     titlemap = dict()
+    timestampmap = dict()
+    
     if filename.endswith('.json'):
         fl = open(filename)
         dat = json.load(fl)
@@ -152,6 +154,8 @@ def do_importfiles(app, filename, dryrun=False):
             tagmap[obj['pathname']] = obj['tags']
             if 'title' in obj:
                 titlemap[obj['pathname']] = obj['title']
+            if timestamps:
+                timestampmap[obj['pathname']] = obj['timestamp']
     else:
         fl = open(filename)
         for ln in fl.readlines():
@@ -177,6 +181,14 @@ def do_importfiles(app, filename, dryrun=False):
     res = curs.execute('SELECT tag FROM tags')
     tagset = set([ tup[0] for tup in res.fetchall() ])
 
+    if timestamps:
+        piccount = 0
+        for (pathname, timestamp) in timestampmap.items():
+            curs.execute('UPDATE pics SET timestamp = ? WHERE pathname = ?', (timestamp, pathname,))
+            piccount += 1
+        if piccount:
+            logging.info('Imported %d timestamps for pics' % (piccount,))
+
     piccount = 0
     tagcount = 0
     
@@ -188,17 +200,23 @@ def do_importfiles(app, filename, dryrun=False):
             continue
         pic = Pic(*tup)
         pic.fetchtags(app)
+
+        if timestamps:
+            for tag in pic.tags:
+                if ':' in tag:
+                    curs.execute('DELETE FROM assoc WHERE guid = ? AND tag = ?', (pic.guid, tag,))
         
         didcount = 0
         for tag in tagls:
-            if ':' in tag:
+            autogen = (':' in tag)
+            if autogen and not timestamps:
                 continue
-            if pic.tags and tag in pic.tags:
+            if pic.tags and tag in pic.tags and not (autogen and timestamps):
                 continue
             didcount += 1
             curs.execute('INSERT INTO assoc (guid, tag) VALUES (?, ?)', (pic.guid, tag))
             if tag not in tagset:
-                curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, False))
+                curs.execute('INSERT INTO tags (tag, autogen) VALUES (?, ?) ON CONFLICT DO NOTHING', (tag, autogen))
                 tagset.add(tag)
 
         if didcount:
