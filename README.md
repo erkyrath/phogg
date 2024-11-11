@@ -8,6 +8,8 @@ This is a very simple photo tagging web app. I use it to maintain my [personal p
 
 The idea is that you hand it a directory full of photos. It shows them in a browser window. You can select photos (or groups of photos) and add tags. You can also search and browse by tag. That's all I need it to do, so that's all it does.
 
+(Oh, another thing it doesn't have is authentication! It runs only on my home network so I just didn't bother. Users beware.)
+
 ## Lack of install documentation
 
 Phogg is a Python web app. You have to install it on a web server that supports [WSGI][] scripts.
