@@ -112,6 +112,7 @@ body {
     position: relative;
     width: 100%;
     display: grid;
+    margin-bottom: 40px;
 }
 
 .PhotoGrid.SizeSmall {
