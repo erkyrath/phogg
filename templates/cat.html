@@ -25,7 +25,6 @@
           <div class="PhotoCellBox">
               <div class="PhotoCellGap"></div>
               <div class="PhotoCell">
-                <div class="Filename">{{ pic.pathname }}</div>
                 <a href="{{ pic.singlename }}"><img class="Photo" loading="lazy" width="{{ pic.thumbwidth }}" height="{{ pic.thumbheight }}" {% if pic.thumbname %}src="{{ thumburi }}/{{ pic.thumbname }}"{% else %}src="{{ picuri }}/{{ pic.pathname }}"{% endif %}></a>
                 {% if pic.title %}
                   <div class="Title Has Bold">{{ pic.title }}</div>
