@@ -152,6 +152,10 @@ body {
     padding-right: 10px;
 }
 
+.PhotoCell.NoTopLine .Photo {
+    padding-top: 10px;
+}
+
 .PhotoCell .Filename {
     font-size: 85%;
     font-weight: bold;
